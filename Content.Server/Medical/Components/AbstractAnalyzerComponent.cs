@@ -1,30 +1,20 @@
-using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
+using Robust.Shared.Audio;
 
 namespace Content.Server.Medical.Components;
 
-/// <inheritdoc/>
-[RegisterComponent, AutoGenerateComponentPause]
-[Access(typeof(HealthAnalyzerSystem), typeof(CryoPodSystem))]
-public sealed partial class HealthAnalyzerComponent : AbstractAnalyzerComponent
+/// <summary>
+/// After scanning, retrieves the target Uid to use with its related UI.
+/// </summary>
+/// <remarks>
+/// Requires <c>ItemToggleComponent</c>.
+/// </remarks>
+public abstract partial class AbstractAnalyzerComponent : Component
 {
-    /// <summary>
-    /// When should the next update be sent for the patient
-    /// </summary>
-    [DataField(customTypeSerializer: typeof(TimeOffsetSerializer))]
-    [AutoPausedField]
-    public TimeSpan NextUpdate = TimeSpan.Zero;
-
     /// <summary>
     /// The delay between patient health updates
     /// </summary>
     [DataField]
     public TimeSpan UpdateInterval = TimeSpan.FromSeconds(1);
-
-    /// <summary>
-    /// If the last state of the health analyzer was active (e.g. they are in range of the patient).
-    /// </summary>
-    [DataField]
-    public bool IsAnalyzerActive = false;
 
     /// <summary>
     /// How long it takes to scan someone.
