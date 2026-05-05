@@ -446,7 +446,7 @@
         - ReagentId: Titanium
           Quantity: 10
         - ReagentId: Phoron
-          Quantity: .2
+          Quantity: .2 # 5 phoron alloy to 1u Phoron reagent
         canReact: false
   - type: Material
   - type: PhysicalComposition

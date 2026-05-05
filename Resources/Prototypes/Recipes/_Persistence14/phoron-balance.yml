@@ -1,6 +1,6 @@
 - type: reaction
   id: phoron-decay
-  min-temp: 500
+  minTemp: 500
   reactants:
     Phoron:
       amount: 1
