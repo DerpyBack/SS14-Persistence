@@ -12,6 +12,7 @@ using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Timing;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 namespace Content.Shared.Salvage.Fulton;
@@ -97,7 +98,7 @@ public abstract partial class SharedFultonSystem : EntitySystem
         }
 
         var fultoned = AddComp<FultonedComponent>(args.Target.Value);
-        fultoned.Beacon = fulton.Beacon;
+        fultoned.BeaconKey = fulton.BeaconKey;
         fultoned.NextFulton = Timing.CurTime + fulton.FultonDuration;
         fultoned.FultonDuration = fulton.FultonDuration;
         fultoned.Removeable = fulton.Removeable;
@@ -111,35 +112,41 @@ public abstract partial class SharedFultonSystem : EntitySystem
         if (args.Target == null || args.Handled || !args.CanReach)
             return;
 
+        // Interact with Beacon
         if (TryComp<FultonBeaconComponent>(args.Target, out var beacon))
         {
+            EnsureBeaconKey(beacon); // Make sure the beacon has a key before linking.
             if (!_foldable.IsFolded(args.Target.Value))
             {
-                component.Beacon = args.Target.Value;
+                component.BeaconKey = beacon.Key;
                 Audio.PlayPredicted(beacon.LinkSound, uid, args.User);
                 _popup.PopupClient(Loc.GetString("fulton-linked"), uid, args.User);
             }
             else
             {
-                component.Beacon = EntityUid.Invalid;
+                component.BeaconKey = null;
                 _popup.PopupClient(Loc.GetString("fulton-folded"), uid, args.User);
             }
 
             return;
         }
 
-        if (Deleted(component.Beacon))
+        // If the beacon doesn't exist anymore, 
+        if (!TryGetBeacon(component.BeaconKey, out var beaconUid))
         {
             _popup.PopupClient(Loc.GetString("fulton-not-found"), uid, args.User);
+            component.BeaconKey = null; // Unlink the beacon since it no longer exists.
             return;
         }
 
+        // Invalid fulton target
         if (!CanApplyFulton(args.Target.Value, component))
         {
             _popup.PopupClient(Loc.GetString("fulton-invalid"), uid, uid);
             return;
         }
 
+        // Already fultoned
         if (HasComp<FultonedComponent>(args.Target))
         {
             _popup.PopupClient(Loc.GetString("fulton-fultoned"), uid, uid);
@@ -162,7 +169,7 @@ public abstract partial class SharedFultonSystem : EntitySystem
     private void OnFultonSplit(EntityUid uid, FultonComponent component, ref StackSplitEvent args)
     {
         var newFulton = EnsureComp<FultonComponent>(args.NewId);
-        newFulton.Beacon = component.Beacon;
+        newFulton.BeaconKey = component.BeaconKey;
         Dirty(args.NewId, newFulton);
     }
 
@@ -210,5 +217,34 @@ public abstract partial class SharedFultonSystem : EntitySystem
     {
         public NetEntity Entity;
         public NetCoordinates Coordinates;
+    }
+
+    protected virtual bool TryGetBeacon(string? key, [NotNullWhen(true)] out EntityUid? beacon)
+    {
+        beacon = null;
+
+        if (key == null)
+            return false;
+
+        var query = EntityQueryEnumerator<FultonBeaconComponent>();
+
+        while (query.MoveNext(out var uid, out var beaconComp))
+        {
+            if (beaconComp.Key == key)
+            {
+                beacon = uid;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected virtual void EnsureBeaconKey(FultonBeaconComponent beacon)
+    {
+        if (beacon.Key != null)
+            return;
+
+        beacon.Key = Guid.NewGuid().ToString();
     }
 }
