@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Content.Shared._Persistence14.RandomTable.State;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
@@ -132,6 +133,22 @@ public sealed partial class RandomTableSystem : EntitySystem
 
     }
     #endregion
+
+    /// <summary>
+    /// Retrieves the state component from an entity
+    /// </summary>
+    /// <param name="uid"></param>
+    /// <returns></returns>
+    public RandomTableStateComponent? GetTableState(EntityUid uid)
+    {
+        if (TryComp<RandomTableStateComponent>(uid, out var comp)) return comp;
+        return null;
+    }
+
+    /// <summary>
+    /// Attempts to retrieve the state component from an entity
+    /// </summary>
+    public bool TryGetTableState(EntityUid uid, [NotNullWhen(true)] out RandomTableStateComponent? comp) => TryComp(uid, out comp);
 
     /// <summary>
     /// Creates the necessary context for executing a run or list of the table selector.

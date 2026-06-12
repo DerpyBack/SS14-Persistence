@@ -14,7 +14,7 @@ public sealed partial class RandomTableGroupSelector : RandomTableSelector
     /// <inheritdoc/>
     protected override IEnumerable<RandomTableValue> RunImplementation(RandomTableContext ctx)
     {
-        var totalWeight = SumWeights(out var activeChildren);
+        var totalWeight = SumWeights(ctx, out var activeChildren);
         if (totalWeight <= 0f) // If there are no valid children do nothing.
             yield break;
 
@@ -37,7 +37,7 @@ public sealed partial class RandomTableGroupSelector : RandomTableSelector
     /// <inheritdoc/>
     public override IEnumerable<(RandomTableValue value, float prob)> List(RandomTableContext ctx, float probabilityMultipler = 1f)
     {
-        var totalWeight = SumWeights(out var activeChildren, useConditions: true);
+        var totalWeight = SumWeights(ctx, out var activeChildren, useConditions: true);
 
         foreach (var child in activeChildren)
         {
@@ -50,13 +50,13 @@ public sealed partial class RandomTableGroupSelector : RandomTableSelector
     /// <summary>
     /// Sums the weights of any active children. For utility, provides the list of active children as an output variable.
     /// </summary>
-    private float SumWeights(out List<RandomTableSelector> activeChildren, bool useConditions = false)
+    private float SumWeights(RandomTableContext ctx, out List<RandomTableSelector> activeChildren, bool useConditions = false)
     {
         activeChildren = new();
         float sum = 0f;
         foreach (var child in Children)
         {
-            if (child.CheckConditions() || !useConditions) // Ignore inactive children.
+            if (child.CheckConditions(ctx) || !useConditions) // Ignore inactive children.
             {
                 sum += child.Weight;
                 activeChildren.Add(child);
