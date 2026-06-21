@@ -73,7 +73,7 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
     private readonly Dictionary<Color, List<(Vector2 Position, string Text, float Scale)>> _strings = new();
     private readonly List<ShuttleExclusionObject> _viewportExclusions = new();
 
-    public ShuttleMapControl() : base(256f, 512f, 512f)
+    public ShuttleMapControl() : base(256f, 4096f, 4096f)
     {
         RobustXamlLoader.Load(this);
         _mapSystem = EntManager.System<SharedMapSystem>();
@@ -251,14 +251,21 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
             return;
         }
 
-        DrawParallax(handle);
+        DrawBacking(handle);
 
         var viewedMapUid = _mapSystem.GetMapOrInvalid(ViewingMap);
         var matty = Matrix3Helpers.CreateInverseTransform(Offset, Angle.Zero);
+
+        var matScale = Matrix3x2.CreateScale(MinimapScale);
+        matScale.Translation = MidPointVector;
+        var worldToView = Matrix3x2.CreateTranslation(Offset with { X = -Offset.X }) * matScale;
+
         var realTime = _timing.RealTime;
         var viewBox = new Box2(Offset - WorldRangeVector, Offset + WorldRangeVector);
         var viewportObjects = GetViewportMapObjects(matty, mapObjects);
         _viewportExclusions.Clear();
+
+        DrawMapDetails(handle, worldToView, viewedMapUid);
 
         // Draw our FTL range + no FTL zones
         // Do it up here because we want this layered below most things.
