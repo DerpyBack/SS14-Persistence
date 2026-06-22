@@ -303,19 +303,22 @@ public partial class BaseShuttleControl : MapGridControl
     {
         var mapBoundsQuery = EntManager.GetEntityQuery<MapBoundsComponent>();
 
-        DrawSectorBoundaries(handle, worldToView);
-
-        if (map != null && mapBoundsQuery.TryGetComponent(map, out var mapBounds) && mapBounds != null)
+        if (map != null && mapBoundsQuery.TryGetComponent(map, out var mapBounds))
         {
+            DrawSectorBoundaries(handle, worldToView, mapBounds.Radius);
+
             var gridCentre = Vector2.Transform(Vector2.Zero, worldToView);
             handle.DrawCircle(gridCentre, MinimapScale * mapBounds.Radius, Color.Red, false);
         }
+        else
+        {
+            DrawSectorBoundaries(handle, worldToView, _configuration.GetCVar(CCVars.SectorMaxRadius));
+        }
     }
 
-    private void DrawSectorBoundaries(DrawingHandleScreen handle, Matrix3x2 worldToView)
+    private void DrawSectorBoundaries(DrawingHandleScreen handle, Matrix3x2 worldToView, float mapRadius)
     {
         var centerRadius = _configuration.GetCVar(CCVars.SectorCenterRadius);
-        var maxRadius = _configuration.GetCVar(CCVars.SectorMaxRadius);
 
         var origin = Vector2.Transform(Vector2.Zero, worldToView);
         var scaledCenterRadius = MinimapScale * centerRadius;
@@ -328,7 +331,7 @@ public partial class BaseShuttleControl : MapGridControl
         // Octant boundaries: 22.5 + n * 45 keeps sector centers on cardinals and diagonals.
         for (var i = 0; i < 8; i++)
         {
-            DrawSectorBoundaryRay(handle, worldToView, centerRadius, maxRadius, SectorHelpers.EastLowerBoundary + (45f * i), borderColor);
+            DrawSectorBoundaryRay(handle, worldToView, centerRadius, mapRadius, SectorHelpers.EastLowerBoundary + (45f * i), borderColor);
         }
 
         foreach (var (sector, weatherId) in _sectorWeatherEvents)
@@ -347,8 +350,8 @@ public partial class BaseShuttleControl : MapGridControl
             if (!TryGetSectorBoundaryAngles(sector, out var firstBoundary, out var secondBoundary))
                 continue;
 
-            DrawSectorBoundaryRay(handle, worldToView, centerRadius, maxRadius, firstBoundary, weatherColor);
-            DrawSectorBoundaryRay(handle, worldToView, centerRadius, maxRadius, secondBoundary, weatherColor);
+            DrawSectorBoundaryRay(handle, worldToView, centerRadius, mapRadius, firstBoundary, weatherColor);
+            DrawSectorBoundaryRay(handle, worldToView, centerRadius, mapRadius, secondBoundary, weatherColor);
                 DrawSectorArc(handle, worldToView, centerRadius, firstBoundary, secondBoundary, weatherColor);
         }
     }
