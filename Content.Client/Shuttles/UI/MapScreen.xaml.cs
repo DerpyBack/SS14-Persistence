@@ -144,8 +144,7 @@ public sealed partial class MapScreen : BoxContainer
                 // Scroll to the FTL spot
                 if (_entManager.TryGetComponent(_shuttleEntity, out TransformComponent? shuttleXform))
                 {
-                    var targetOffset = _maps.GetGridPosition(_shuttleEntity.Value);
-                    MapRadar.SetMap(shuttleXform.MapID, targetOffset, recentering: true);
+                    MapRadar.SetMap(shuttleXform.MapID, recentering: true);
                 }
 
                 _ftlStyle.BackgroundColor = Color.FromHex("#B02E26");
@@ -202,7 +201,7 @@ public sealed partial class MapScreen : BoxContainer
         if (_shuttleEntity != null)
         {
             var mapPos = _xformSystem.GetMapCoordinates(_shuttleEntity.Value);
-            MapRadar.SetMap(mapPos.MapId, mapPos.Position);
+            MapRadar.SetMap(mapPos.MapId);
         }
     }
 
@@ -430,13 +429,13 @@ public sealed partial class MapScreen : BoxContainer
         var coordinates = _shuttles.GetMapCoordinates(mapObject);
 
         // If it's our map then scroll, otherwise just set position there.
-        MapRadar.SetMap(coordinates.MapId, coordinates.Position, recentering: true);
+        MapRadar.SetMap(coordinates.MapId, recentering: true);
     }
 
-    public void SetMap(MapId mapId, Vector2 position)
+    public void SetMap(MapId mapId)
     {
-        MapRadar.SetMap(mapId, position);
-        MapRadar.Offset = position;
+        MapRadar.SetMap(mapId);
+        MapRadar.Offset = Vector2.Zero;
     }
 
     /// <summary>
@@ -538,7 +537,7 @@ public sealed partial class MapScreen : BoxContainer
     {
         if (_entManager.TryGetComponent(_shuttleEntity, out TransformComponent? shuttleXform))
         {
-            SetMap(shuttleXform.MapID, _maps.GetGridPosition((_shuttleEntity.Value, null, shuttleXform)));
+            SetMap(shuttleXform.MapID);
         }
     }
 }

@@ -87,7 +87,7 @@ public sealed partial class ShuttleConsoleWindow : FancyWindow,
         if (mode != ShuttleConsoleMode.Map)
         {
             MapContainer.Visible = false;
-            MapContainer.SetMap(MapId.Nullspace, Vector2.Zero);
+            MapContainer.SetMap(MapId.Nullspace);
         }
 
         if (mode != ShuttleConsoleMode.Dock)
