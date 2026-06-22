@@ -389,8 +389,16 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
             gridRelativePos = gridRelativePos with { Y = -gridRelativePos.Y };
             var gridUiPos = ScalePosition(gridRelativePos);
 
-            var mapObject = GetMapObject(gridRelativePos, Angle.Zero, scalePosition: true);
-            AddMapObject(existingEdges, existingVerts, mapObject);
+            if (grid.Owner == _shuttleEntity)
+            {
+                var mapObject = GetMapObjectDirectional(gridRelativePos, -gridRot, scalePosition: true);
+                AddMapObject(existingEdges, existingVerts, mapObject);
+            }
+            else
+            {
+                var mapObject = GetMapObject(gridRelativePos, Angle.Zero, scalePosition: true);
+                AddMapObject(existingEdges, existingVerts, mapObject);
+            }
 
             // Text
             if (iffComp != null && (iffComp.Flags & IFFFlags.HideLabel) != 0x0)
@@ -481,7 +489,7 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
                     handle.DrawDottedLine(gridUiPos, mouseLocalPos, color, (float)realTime.TotalSeconds * 30f);
 
                     // Draw shuttle pre-vis
-                    var mouseVerts = GetMapObject(mouseLocalPos, _ftlAngle, scale: MinimapScale);
+                    var mouseVerts = GetMapObjectDirectional(mouseLocalPos, _ftlAngle, scale: MinimapScale);
 
                     handle.DrawPrimitives(DrawPrimitiveTopology.TriangleFan, mouseVerts.Span, color.WithAlpha(0.05f));
                     handle.DrawPrimitives(DrawPrimitiveTopology.LineLoop, mouseVerts.Span, color);
@@ -576,6 +584,30 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
             localPos + angle.RotateVec(new Vector2(diamondRadius, 0f)) * scale,
             localPos + angle.RotateVec(new Vector2(0f, 2f * diamondRadius)) * scale,
             localPos + angle.RotateVec(new Vector2(-diamondRadius, 0f)) * scale,
+        };
+
+        if (scalePosition)
+        {
+            for (var i = 0; i < mapObj.Count; i++)
+            {
+                mapObj[i] = ScalePosition(mapObj[i]);
+            }
+        }
+
+        return mapObj;
+    }
+
+    private ValueList<Vector2> GetMapObjectDirectional(Vector2 localPos, Angle angle, float scale = 1f, bool scalePosition = false)
+    {
+        // Constant size diamonds
+        var objectRadius = GetMapObjectRadius();
+
+        var mapObj = new ValueList<Vector2>(4)
+        {
+            localPos + angle.RotateVec(new Vector2(0f, 0.4f) * objectRadius) * scale,
+            localPos + angle.RotateVec(new Vector2(1f, 1f) * objectRadius) * scale,
+            localPos + angle.RotateVec(new Vector2(0f, -2f) * objectRadius) * scale,
+            localPos + angle.RotateVec(new Vector2(-1, 1f) * objectRadius) * scale,
         };
 
         if (scalePosition)
