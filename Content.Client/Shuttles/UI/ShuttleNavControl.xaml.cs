@@ -133,7 +133,7 @@ public sealed partial class ShuttleNavControl : BaseShuttleControl
         RotateWithEntity = state.RotateWithEntity;
 
         _docks = state.Docks;
-        _sectorWeatherEvents = state.SectorWeatherEvents;
+        SectorWeatherEvents = state.SectorWeatherEvents;
         _trackedEntities = state.TrackedEntities;
     }
 

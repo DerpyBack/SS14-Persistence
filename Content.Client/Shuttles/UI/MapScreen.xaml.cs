@@ -158,6 +158,8 @@ public sealed partial class MapScreen : BoxContainer
                 break;
         }
 
+        MapRadar.SectorWeatherEvents = state.SectorWeatherEvents;
+
         if (IsPingBlocked())
         {
             MapRebuildButton.Disabled = true;
@@ -210,11 +212,6 @@ public sealed partial class MapScreen : BoxContainer
     /// </summary>
     public void PingMap()
     {
-        if (_console != null)
-        {
-            _audio.PlayEntity(new SoundPathSpecifier("/Audio/Effects/Shuttle/radar_ping.ogg"), Filter.Local(), _console.Value, true);
-        }
-
         RebuildMapObjects();
         BumpMapDequeue();
 
@@ -539,5 +536,7 @@ public sealed partial class MapScreen : BoxContainer
         {
             SetMap(shuttleXform.MapID);
         }
+
+        PingMap();
     }
 }

@@ -50,7 +50,7 @@ public partial class BaseShuttleControl : MapGridControl
 
     private (DirectionFlag, Vector2i)[] _neighborDirections;
 
-    internal Dictionary<SpaceSector, string> _sectorWeatherEvents = new();
+    internal Dictionary<SpaceSector, string> SectorWeatherEvents = new();
 
     public BaseShuttleControl() : this(32f, 32f, 32f)
     {
@@ -334,7 +334,7 @@ public partial class BaseShuttleControl : MapGridControl
             DrawSectorBoundaryRay(handle, worldToView, centerRadius, mapRadius, SectorHelpers.EastLowerBoundary + (45f * i), borderColor);
         }
 
-        foreach (var (sector, weatherId) in _sectorWeatherEvents)
+        foreach (var (sector, weatherId) in SectorWeatherEvents)
         {
             if (!_prototypes.TryIndex<SectorWeatherPrototype>(weatherId, out var weather))
                 continue;

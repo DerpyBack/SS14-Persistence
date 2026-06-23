@@ -559,7 +559,8 @@ public sealed partial class ShuttleConsoleSystem : SharedShuttleConsoleSystem
             ftlState,
             stateDuration,
             beacons ?? new List<ShuttleBeaconObject>(),
-            exclusions ?? new List<ShuttleExclusionObject>());
+            exclusions ?? new List<ShuttleExclusionObject>(),
+            _sectorWeather.GetHazardWeatherSnapshot());
     }
 
     private void OnDampingMessage(Entity<ShuttleConsoleComponent> ent, ref ShuttleConsoleDampingMessage args)
