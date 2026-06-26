@@ -4,7 +4,7 @@
   name: Storage Counter
   description: |-
     A counter with storage capacity.
-    (Use with a handlabeler for better usage)
+    Use a handlabeler for better organization
   components:
   - type: Sprite
     sprite: _Persistence14/Structures/storage/storage-counter.rsi
