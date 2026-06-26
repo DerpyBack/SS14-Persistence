@@ -12,7 +12,7 @@
       steps: 
       - material: WoodPlank
         amount: 2
-        doAfter: 2
+        doAfter: 3
 
   - node: frame-step0
     entity: StorageCounterFrame
@@ -50,7 +50,6 @@
       steps:
       - material: WoodPlank
         amount: 2
-        doAfter: 2
         doAfter: 1
       - tool: Sawing
         doAfter: 3
@@ -75,7 +74,7 @@
       steps:
       - material: WoodPlank
         amount: 2
-        doAfter: 2
+        doAfter: 3
       - tool: Sawing
         doAfter: 2
 
@@ -106,13 +105,13 @@
         doAfter: 1
       - material: Plastic
         amount: 2
-        doAfter: 2
+        doAfter: 3
       - tool: Screwing
         doAfter: 2
 
 
   - node: storagecounter
-    entity: StorageCounter
+    entity: BaseStorageCounter
     edges:
     - to: frame-step3
       completed:
@@ -124,6 +123,6 @@
         amount: 1
       steps:
       - tool: Sawing
-        doAfter: 2
+        doAfter: 3
       - tool: Prying
         doAfter: 2

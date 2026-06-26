@@ -1,5 +1,5 @@
 - type: entity
-  id: StorageCounter
+  id: BaseStorageCounter
   parent: TableCounterWood
   name: Storage Counter
   description: |-
