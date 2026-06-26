@@ -1,0 +1,32 @@
+- type: entity
+  id: BaseStorageCounter
+  parent: TableCounterWood
+  name: Storage Counter
+  description: A counter with storage capacity
+  components:
+  - type: Sprite
+    sprite: _Persistence14/Structures/storage/storage-counter.rsi
+    state: white
+  - type: Icon
+    sprite: _Persistence14/Structures/storage/storage-counter.rsi
+    state: white
+  - type: PlaceableSurface
+  - type: Storage
+    grid:
+    - 0,0,5,5
+    - 7,0,12,5
+    maxItemSize: Huge
+  - type: UserInterface
+    interfaces:
+      enum.StorageUiKey.Key:
+        type: StorageBoundUserInterface
+  - type: ContainerContainer
+    containers:
+      storagebase: !type:Container
+        ents: []
+  - type: IconSmooth
+    key: counter
+    base: white
+  - type: Tag
+    tags: 
+    - StorageCounter
