@@ -3,10 +3,13 @@
   id: BasePlushieRecipe
   completetime: 5
   materials:
-    Cloth: 100
-    Cotton: 300
+    Cloth: 300
+    Cotton: 1000
+    Pyrotton: 100
+    Plastic: 100
 
 - type: latheRecipe
   parent: BasePlushieRecipe
   id: PlushieNuke
   result: PlushieNuke
+
