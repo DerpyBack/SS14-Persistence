@@ -75,13 +75,13 @@
                             Text="{controls:Loc 'shuttle-console-dock-toggle'}"
                             TextAlign="Center"
                             ToggleMode="True"/>
-                                   <controls:BoxContainer Orientation="Horizontal" HorizontalExpand="True">
-                                          <controls:Label Text="{controls:Loc 'shuttle-console-sort-label'}" HorizontalExpand="True"/>
-                                          <controls:OptionButton HorizontalAlignment="Right" Name="SortModeButton" MinWidth="120"/>
-                                   </controls:BoxContainer>
-                    <controls:BoxContainer Orientation="Horizontal" HorizontalExpand="True">
+                    <controls:BoxContainer Orientation="Vertical" HorizontalExpand="True">
+                           <controls:Label Text="{controls:Loc 'shuttle-console-sort-label'}" HorizontalExpand="True"/>
+                           <controls:OptionButton HorizontalAlignment="Right" Name="SortModeButton" MinWidth="120"/>
+                    </controls:BoxContainer>
+                    <controls:BoxContainer Orientation="Vertical" HorizontalExpand="True">
                         <controls:Label Text="{controls:Loc 'shuttle-console-damping-label'}" HorizontalExpand="True"/>
-                        <controls:OptionButton HorizontalAlignment="Right" Name="DampingModeButton" MinWidth="120"/>
+                        <controls:BoxContainer Name="DampingModeSelectorContainer" MinWidth="120" HorizontalAlignment="Right"/>
                     </controls:BoxContainer>
                 </controls:BoxContainer>
             </controls:BoxContainer>
