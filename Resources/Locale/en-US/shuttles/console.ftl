@@ -40,6 +40,7 @@ shuttle-console-sort-label = Filter
 shuttle-console-sort-none = None
 shuttle-console-sort-ship = Ship
 shuttle-console-sort-station = Station
+shuttle-console-sort-other = Other
 
 shuttle-console-unknown = Unknown
 shuttle-console-iff-label = {$name} ({$distance}m)
@@ -61,8 +62,8 @@ shuttle-console-ftl-state-Invalid = Invalid
 
 shuttle-console-map-settings = Settings
 shuttle-console-ftl-button = FTL
-shuttle-console-map-rebuild = Scan for objects
-shuttle-console-map-beacons = Show beacons
+shuttle-console-map-rebuild = Refresh
+shuttle-console-map-beacons = Beacons
 
 shuttle-console-no-signal = No signal
 

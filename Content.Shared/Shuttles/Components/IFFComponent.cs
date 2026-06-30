@@ -69,17 +69,6 @@ public sealed partial class IFFComponent : Component
 
         return Designation == IFFDesignation.Station ? StationSortTags : ShipSortTags;
     }
-
-    public bool HasSortTag(ProtoId<TagPrototype> tag)
-    {
-        foreach (var sortTag in GetSortTags())
-        {
-            if (sortTag == tag)
-                return true;
-        }
-
-        return false;
-    }
 }
 
 public enum IFFDesignation : byte
@@ -88,11 +77,13 @@ public enum IFFDesignation : byte
     Station,
 }
 
+[Flags]
 public enum IFFSortMode : byte
 {
-    None,
-    Ship,
-    Station,
+    None = 0,
+    Other = 1,
+    Ship = 2,
+    Station = 4,
 }
 
 [Flags]

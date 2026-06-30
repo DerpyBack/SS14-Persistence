@@ -95,20 +95,13 @@ public sealed partial class MapScreen : BoxContainer
             RequestBeaconFTL?.Invoke(ent, angle);
         };
 
-        MapBeaconsButton.OnToggled += args =>
-        {
-            MapRadar.ShowBeacons = args.Pressed;
-        };
+        FilterStation.Pressed = MapRadar.SortMode.HasFlag(IFFSortMode.Station);
+        FilterShip.Pressed = MapRadar.SortMode.HasFlag(IFFSortMode.Ship);
+        FilterOther.Pressed = MapRadar.SortMode.HasFlag(IFFSortMode.Other);
 
-        SortModeButton.AddItem(Loc.GetString("shuttle-console-sort-none"), (int)IFFSortMode.None);
-        SortModeButton.AddItem(Loc.GetString("shuttle-console-sort-station"), (int)IFFSortMode.Station);
-        SortModeButton.AddItem(Loc.GetString("shuttle-console-sort-ship"), (int)IFFSortMode.Ship);
-        SortModeButton.OnItemSelected += args =>
-        {
-            SortModeButton.SelectId(args.Id);
-            MapRadar.SortMode = (IFFSortMode)args.Id;
-        };
-        SortModeButton.SelectId((int)IFFSortMode.None);
+        FilterStation.OnToggled += _ => SetSortModeFlags();
+        FilterShip.OnToggled += _ => SetSortModeFlags();
+        FilterOther.OnToggled += _ => SetSortModeFlags();
     }
 
     public void UpdateState(ShuttleMapInterfaceState state)
@@ -165,6 +158,14 @@ public sealed partial class MapScreen : BoxContainer
             MapRebuildButton.Disabled = true;
             ClearMapObjects();
         }
+    }
+
+    private void SetSortModeFlags()
+    {
+        MapRadar.SortMode =
+            (FilterStation.Pressed ? IFFSortMode.Station : 0)
+            | (FilterShip.Pressed ? IFFSortMode.Ship : 0)
+            | (FilterOther.Pressed ? IFFSortMode.Other : 0);
     }
 
     private void SetFTLAllowed(bool value)

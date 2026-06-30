@@ -54,11 +54,11 @@ public sealed partial class NavScreen : BoxContainer
 
         DampingModeSelectorContainer.AddChild(DampingModeSelector);
 
-        SortModeButton.AddItem(Loc.GetString("shuttle-console-sort-none"), (int)IFFSortMode.None);
+        SortModeButton.AddItem(Loc.GetString("shuttle-console-sort-none"), (int)IFFSortMode.Other);
         SortModeButton.AddItem(Loc.GetString("shuttle-console-sort-station"), (int)IFFSortMode.Station);
         SortModeButton.AddItem(Loc.GetString("shuttle-console-sort-ship"), (int)IFFSortMode.Ship);
         SortModeButton.OnItemSelected += OnSortSelected;
-        SortModeButton.SelectId((int)IFFSortMode.None);
+        SortModeButton.SelectId((int)IFFSortMode.Other);
     }
 
     public void SetShuttle(EntityUid? shuttle)

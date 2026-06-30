@@ -33,7 +33,7 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
 
     public bool ShowBeacons = true;
     public MapId ViewingMap = MapId.Nullspace;
-    public IFFSortMode SortMode { get; set; } = IFFSortMode.None;
+    public IFFSortMode SortMode { get; set; } = IFFSortMode.Station | IFFSortMode.Ship | IFFSortMode.Other;
 
     private const float SortFadeMultiplier = 0.1f;
 
@@ -375,7 +375,7 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
 
             var gridColor = _shuttles.GetIFFColor(grid, self: _shuttleEntity == grid.Owner, component: iffComp);
 
-            if (ShouldFade(iffComp))
+            if (grid.Owner != _shuttleEntity && ShouldFade(iffComp))
                 gridColor = gridColor.WithAlpha(gridColor.A * SortFadeMultiplier);
 
             var existingVerts = _verts.GetOrNew(gridColor);
@@ -519,7 +519,7 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
 
     private bool ShouldFade(IFFComponent? iff)
     {
-        return !_shuttles.MatchesSortTag(iff, SortMode);
+        return !_shuttles.MatchesSortTags(iff, SortMode);
     }
 
     private void AddMapObject(List<Vector2> edges, List<Vector2> verts, ValueList<Vector2> mapObject)

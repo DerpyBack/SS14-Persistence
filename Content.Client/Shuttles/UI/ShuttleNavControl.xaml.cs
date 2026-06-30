@@ -47,7 +47,7 @@ public sealed partial class ShuttleNavControl : BaseShuttleControl
     public bool ShowIFF { get; set; } = true;
     public bool ShowDocks { get; set; } = true;
     public bool RotateWithEntity { get; set; } = true;
-    public IFFSortMode SortMode { get; set; } = IFFSortMode.None;
+    public IFFSortMode SortMode { get; set; } = IFFSortMode.Other;
 
     private const float SortFadeMultiplier = 0.1f;
 
@@ -420,7 +420,7 @@ public sealed partial class ShuttleNavControl : BaseShuttleControl
 
     private bool ShouldFade(IFFComponent? iff)
     {
-        return !_shuttles.MatchesSortTag(iff, SortMode);
+        return !_shuttles.MatchesSortTags(iff, SortMode);
     }
 
     private void DrawDocks(DrawingHandleScreen handle, EntityUid uid, Matrix3x2 gridToView)
