@@ -9,11 +9,11 @@
   group: medicalmarket
 
 - type: cargoProduct
-  id: MedicalCannibisRainbowKit:
+  id: MedicalCannibisRainbowKit
   icon: 
     sprite: Objects/Specific/Hydroponics/rainbow_cannabis.rsi
-    icon: dried
-  product: MedicalCannibisRainbowKit
+    state: dried
+  product: BoxMedicalCannabisRainbowKit
   cost: 69420
   category: cargoproduct-category-name-medical
   group: medicalmarket4
