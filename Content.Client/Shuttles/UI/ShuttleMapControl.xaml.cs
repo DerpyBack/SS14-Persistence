@@ -669,13 +669,10 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
     /// <summary>
     /// Sets the map objects for the next draw.
     /// </summary>
-    public void SetMapObjects(Dictionary<MapId, List<IMapObject>> mapObjects)
+    public void SetMapObjects(List<IMapObject> mapObjects)
     {
         _mapObjects.Clear();
 
-        if (mapObjects.TryGetValue(ViewingMap, out var obbies))
-        {
-            _mapObjects.AddRange(obbies);
-        }
+        _mapObjects.AddRange(mapObjects);
     }
 }

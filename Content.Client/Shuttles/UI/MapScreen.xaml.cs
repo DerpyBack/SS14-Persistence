@@ -56,14 +56,13 @@ public sealed partial class MapScreen : BoxContainer
     public event Action<MapCoordinates, Angle>? RequestFTL;
     public event Action<NetEntity, Angle>? RequestBeaconFTL;
 
-    private readonly Dictionary<MapId, BoxContainer> _mapHeadings = new();
-    private readonly Dictionary<MapId, List<IMapObject>> _mapObjects = new();
+    private readonly List<IMapObject> _mapObjects = new();
     private readonly List<(MapId mapId, IMapObject mapobj)> _pendingMapObjects = new();
 
     /// <summary>
     /// Store the names of map object controls for re-sorting later.
     /// </summary>
-    private Dictionary<Control, string> _mapObjectControls = new();
+    private Dictionary<Control, IMapObject> _mapObjectControls = new();
 
     private List<Control> _sortChildren = new();
 
@@ -99,9 +98,21 @@ public sealed partial class MapScreen : BoxContainer
         FilterShip.Pressed = MapRadar.SortMode.HasFlag(IFFSortMode.Ship);
         FilterOther.Pressed = MapRadar.SortMode.HasFlag(IFFSortMode.Other);
 
-        FilterStation.OnToggled += _ => SetSortModeFlags();
-        FilterShip.OnToggled += _ => SetSortModeFlags();
-        FilterOther.OnToggled += _ => SetSortModeFlags();
+        FilterStation.OnToggled += _ =>
+        {
+            SetSortModeFlags();
+            FilterMapObjects();
+        };
+        FilterShip.OnToggled += _ =>
+        {
+            SetSortModeFlags();
+            FilterMapObjects();
+        };
+        FilterOther.OnToggled += _ =>
+        {
+            SetSortModeFlags();
+            FilterMapObjects();
+        };
     }
 
     public void UpdateState(ShuttleMapInterfaceState state)
@@ -239,7 +250,6 @@ public sealed partial class MapScreen : BoxContainer
         HyperspaceDestinations.RemoveAllChildren();
         _pendingMapObjects.Clear();
         _mapObjects.Clear();
-        _mapHeadings.Clear();
     }
 
     /// <summary>
@@ -266,50 +276,7 @@ public sealed partial class MapScreen : BoxContainer
             {
                 continue;
             }
-            var mapName = mapMetadata.EntityName;
 
-            if (string.IsNullOrEmpty(mapName))
-            {
-                mapName = Loc.GetString("shuttle-console-unknown");
-            }
-
-            var heading = new CollapsibleHeading(mapName);
-
-            heading.MinHeight = 32f;
-            heading.AddStyleClass(ContainerButton.StyleClassButton);
-            heading.HorizontalAlignment = HAlignment.Stretch;
-            heading.Label.HorizontalAlignment = HAlignment.Center;
-            heading.Label.HorizontalExpand = true;
-            heading.HorizontalExpand = true;
-
-            var gridContents = new BoxContainer()
-            {
-                Orientation = LayoutOrientation.Vertical,
-                VerticalExpand = true,
-            };
-
-            var body = new CollapsibleBody()
-            {
-                HorizontalAlignment = HAlignment.Stretch,
-                VerticalAlignment = VAlignment.Top,
-                HorizontalExpand = true,
-                Children =
-                {
-                    gridContents
-                }
-            };
-
-            var mapButton = new Collapsible(heading, body);
-
-            heading.OnToggled += args =>
-            {
-                if (args.Pressed)
-                {
-                    HideOtherCollapsibles(mapButton);
-                }
-            };
-
-            _mapHeadings.Add(mapComp.MapId, gridContents);
             foreach (var grid in _mapManager.GetAllGrids(mapComp.MapId))
             {
                 _entManager.TryGetComponent(grid.Owner, out IFFComponent? iffComp);
@@ -324,7 +291,7 @@ public sealed partial class MapScreen : BoxContainer
                 // Always show our shuttle immediately
                 if (grid.Owner == _shuttleEntity)
                 {
-                    AddMapObject(mapComp.MapId, gridObj);
+                    AddMapObject(gridObj);
                 }
                 // If we can show it then add it to pending.
                 else if (!_shuttles.IsBeaconMap(mapUid) && (iffComp == null ||
@@ -350,14 +317,6 @@ public sealed partial class MapScreen : BoxContainer
 
                 _pendingMapObjects.Add((mapComp.MapId, beacon));
             }
-
-            HyperspaceDestinations.AddChild(mapButton);
-
-            // Zoom in to our map
-            if (mapComp.MapId == MapRadar.ViewingMap)
-            {
-                mapButton.BodyVisible = true;
-            }
         }
 
         // Need to sort from furthest way to nearest (as we will pop from the end of the list first).
@@ -377,20 +336,6 @@ public sealed partial class MapScreen : BoxContainer
 
             return (yMapPos.Position - shuttlePos).Length().CompareTo((xMapPos.Position - shuttlePos).Length());
         });
-    }
-
-    /// <summary>
-    /// Hides other maps upon the specified collapsible being selected (AKA hacky collapsible groups).
-    /// </summary>
-    private void HideOtherCollapsibles(Collapsible collapsible)
-    {
-        foreach (var child in HyperspaceDestinations.Children)
-        {
-            if (child is not Collapsible childCollapse || childCollapse == collapsible)
-                continue;
-
-            childCollapse.BodyVisible = false;
-        }
     }
 
     /// <summary>
@@ -439,12 +384,9 @@ public sealed partial class MapScreen : BoxContainer
     /// <summary>
     /// Adds a map object to the specified sector map.
     /// </summary>
-    private void AddMapObject(MapId mapId, IMapObject mapObj)
+    private void AddMapObject(IMapObject mapObj)
     {
-        var existing = _mapObjects.GetOrNew(mapId);
-        existing.Add(mapObj);
-
-        var gridContents = _mapHeadings[mapId];
+        _mapObjects.Add(mapObj);
 
         var gridButton = new Button()
         {
@@ -464,42 +406,62 @@ public sealed partial class MapScreen : BoxContainer
             }
         };
 
-        _mapObjectControls.Add(gridContainer, mapObj.Name);
-        gridContents.AddChild(gridContainer);
+        _mapObjectControls.Add(gridContainer, mapObj);
+        HyperspaceDestinations.AddChild(gridContainer);
 
         gridButton.OnPressed += args =>
         {
             OnMapObjectPress(mapObj);
         };
 
-        if (gridContents.ChildCount > 1)
+        FilterMapObjects();
+    }
+
+    private void FilterMapObjects()
+    {
+        // Re-sort the children
+        _sortChildren.Clear();
+
+        foreach (var child in _mapObjectControls.Keys)
         {
-            // Re-sort the children
-            _sortChildren.Clear();
+            _sortChildren.Add(child);
+        }
 
-            foreach (var child in gridContents.Children)
+        var toRemove = new List<Control>();
+
+        foreach (var child in _sortChildren)
+        {
+            child.Orphan();
+
+            if (_mapObjectControls[child] is GridMapObject grid)
             {
-                DebugTools.Assert(_mapObjectControls.ContainsKey(child));
-                _sortChildren.Add(child);
+                _entManager.TryGetComponent(grid.Entity, out IFFComponent? iffComp);
+                if (!_shuttles.MatchesSortTags(iffComp, MapRadar.SortMode))
+                    toRemove.Add(child);
             }
+        }
 
-            foreach (var child in _sortChildren)
-            {
-                child.Orphan();
-            }
+        _sortChildren.RemoveAll(child => toRemove.Contains(child));
 
+        /*_sortChildren.RemoveAll(child =>
+            _mapObjectControls[child] is GridMapObject grid
+            && _entManager.TryGetComponent(grid.Entity, out IFFComponent? iffComp)
+            && _shuttles.MatchesSortTags(iffComp, MapRadar.SortMode));*/
+
+        if (_sortChildren.Count > 1)
+        {
             _sortChildren.Sort((x, y) =>
             {
-                var xText = _mapObjectControls[x];
-                var yText = _mapObjectControls[y];
+                var xText = _mapObjectControls[x].Name;
+                var yText = _mapObjectControls[y].Name;
 
                 return string.Compare(xText, yText, StringComparison.CurrentCultureIgnoreCase);
             });
+        }
 
-            foreach (var control in _sortChildren)
-            {
-                gridContents.AddChild(control);
-            }
+        foreach (var control in _sortChildren)
+        {
+            HyperspaceDestinations.AddChild(control);
         }
     }
 
@@ -513,7 +475,7 @@ public sealed partial class MapScreen : BoxContainer
         {
             var mapObj = _pendingMapObjects[^1];
             _pendingMapObjects.RemoveAt(_pendingMapObjects.Count - 1);
-            AddMapObject(mapObj.mapId, mapObj.mapobj);
+            AddMapObject(mapObj.mapobj);
             BumpMapDequeue();
         }
 
