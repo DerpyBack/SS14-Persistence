@@ -45,6 +45,9 @@ public sealed partial class NavScreen : BoxContainer
 
         DampingModeSelector = new RadioOptions<int>(RadioOptionsLayout.Horizontal)
         {
+            FirstButtonStyle = StyleClass.ButtonOpenRight,
+            ButtonStyle = StyleClass.ButtonOpenBoth,
+            LastButtonStyle = StyleClass.ButtonOpenLeft,
             HorizontalExpand = true,
         };
         DampingModeSelector.AddItem(Loc.GetString("shuttle-console-damping-cruise"), (int)ShuttleDampingMode.Cruise);
