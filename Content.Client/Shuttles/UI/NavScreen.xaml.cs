@@ -43,7 +43,7 @@ public sealed partial class NavScreen : BoxContainer
         DockToggle.OnToggled += OnDockTogglePressed;
         DockToggle.Pressed = NavRadar.ShowDocks;
 
-        DampingModeSelector = new RadioOptions<int>(RadioOptionsLayout.Vertical)
+        DampingModeSelector = new RadioOptions<int>(RadioOptionsLayout.Horizontal)
         {
             HorizontalExpand = true,
         };
@@ -54,11 +54,13 @@ public sealed partial class NavScreen : BoxContainer
 
         DampingModeSelectorContainer.AddChild(DampingModeSelector);
 
-        SortModeButton.AddItem(Loc.GetString("shuttle-console-sort-none"), (int)IFFSortMode.Other);
-        SortModeButton.AddItem(Loc.GetString("shuttle-console-sort-station"), (int)IFFSortMode.Station);
-        SortModeButton.AddItem(Loc.GetString("shuttle-console-sort-ship"), (int)IFFSortMode.Ship);
-        SortModeButton.OnItemSelected += OnSortSelected;
-        SortModeButton.SelectId((int)IFFSortMode.Other);
+        FilterStation.Pressed = NavRadar.SortMode.HasFlag(IFFSortMode.Station);
+        FilterShip.Pressed = NavRadar.SortMode.HasFlag(IFFSortMode.Ship);
+        FilterOther.Pressed = NavRadar.SortMode.HasFlag(IFFSortMode.Other);
+
+        FilterStation.OnToggled += _ => SetSortModeFlags();
+        FilterShip.OnToggled += _ => SetSortModeFlags();
+        FilterOther.OnToggled += _ => SetSortModeFlags();
     }
 
     public void SetShuttle(EntityUid? shuttle)
@@ -161,9 +163,11 @@ public sealed partial class NavScreen : BoxContainer
         OnDampingModeChanged?.Invoke((ShuttleDampingMode)args.Id);
     }
 
-    private void OnSortSelected(OptionButton.ItemSelectedEventArgs args)
+    private void SetSortModeFlags()
     {
-        SortModeButton.SelectId(args.Id);
-        NavRadar.SortMode = (IFFSortMode)args.Id;
+        NavRadar.SortMode =
+            (FilterStation.Pressed ? IFFSortMode.Station : 0)
+            | (FilterShip.Pressed ? IFFSortMode.Ship : 0)
+            | (FilterOther.Pressed ? IFFSortMode.Other : 0);
     }
 }

@@ -31,7 +31,7 @@ sector-south = South
 sector-southwest = SouthWest
 sector-west = West
 sector-northwest = NorthWest
-shuttle-console-damping-label = Damping
+shuttle-console-damping-label = Inertial Dampener
 shuttle-console-damping-cruise = Cruise
 shuttle-console-damping-normal = Normal
 shuttle-console-damping-anchor = Anchor
@@ -47,6 +47,8 @@ shuttle-console-iff-label = {$name} ({$distance}m)
 shuttle-console-exclusion = Exclusion area
 
 shuttle-console-nav-settings = Settings
+shuttle-console-nav-status = Status
+shuttle-console-nav-controls = Controls
 shuttle-console-iff-toggle = Show IFF
 shuttle-console-dock-toggle = Show docks
 

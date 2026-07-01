@@ -20,7 +20,7 @@
                 <controls:BoxContainer Orientation="Vertical">
                 <!-- Normal buttons -->
                 <controls1:StripeBack MinSize="48 48">
-                    <controls:Label Name="SettingsLabel" Text="{controls:Loc 'shuttle-console-map-settings'}"
+                    <controls:Label Name="DisplayLabel" Text="{controls:Loc 'shuttle-console-display-label'}"
                            HorizontalAlignment="Center"/>
                 </controls1:StripeBack>
                 <controls:Button Name="MapRebuildButton"
