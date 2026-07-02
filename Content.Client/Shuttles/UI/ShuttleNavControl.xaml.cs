@@ -242,7 +242,7 @@ public sealed partial class ShuttleNavControl : BaseShuttleControl
             // Color.FromHex("#FFC000FF")
             // Hostile default: Color.Firebrick
             var labelName = _shuttles.GetIFFLabel(grid, self: false, iff);
-            var designation = iff?.Designation ?? IFFDesignation.Ship;
+            var designation = iff?.Designation ?? IFFDesignation.Other;
             var labelScale = designation == IFFDesignation.Station ? 1.3f : 1f;
 
             if (ShowIFF &&

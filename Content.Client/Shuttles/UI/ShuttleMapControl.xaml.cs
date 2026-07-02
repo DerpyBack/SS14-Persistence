@@ -410,7 +410,7 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
             if (string.IsNullOrEmpty(iffText))
                 continue;
 
-            var designation = iffComp?.Designation ?? IFFDesignation.Ship;
+            var designation = iffComp?.Designation ?? IFFDesignation.Other;
             var labelScale = designation == IFFDesignation.Station ? 1.3f : 1f;
             var existingStrings = _strings.GetOrNew(gridColor);
             existingStrings.Add((gridUiPos, iffText, labelScale));

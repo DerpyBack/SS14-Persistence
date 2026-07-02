@@ -93,17 +93,11 @@ public abstract partial class SharedShuttleSystem
         if (sortMode == IFFSortMode.None)
             return false;
 
-        if (component == null)
-            return sortMode.HasFlag(IFFSortMode.Other);
-
-        var tags = component.GetSortTags();
-
-        if (tags.Contains(IFFComponent.SortTagStation))
-            return sortMode.HasFlag(IFFSortMode.Station);
-
-        if (tags.Contains(IFFComponent.SortTagShip))
-            return sortMode.HasFlag(IFFSortMode.Ship);
-
-        return sortMode.HasFlag(IFFSortMode.Other);
+        return component?.Designation switch
+        {
+            IFFDesignation.Station => sortMode.HasFlag(IFFSortMode.Station),
+            IFFDesignation.Ship => sortMode.HasFlag(IFFSortMode.Ship),
+            _ => sortMode.HasFlag(IFFSortMode.Other),
+        };
     }
 }
