@@ -1,4 +1,5 @@
 using System.Numerics;
+using Content.Client.Shuttles.Systems;
 using Content.Client.Stylesheets;
 using Content.Shared.Sectors.Prototypes;
 using Content.Shared.Shuttles.BUIStates;
@@ -21,6 +22,7 @@ public sealed partial class NavScreen : BoxContainer
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
     private SharedTransformSystem _xformSystem;
     private SharedSectorSystem _sectorSystem;
+    private readonly ShuttleSystem _shuttles;
 
     private EntityUid? _consoleEntity; // Entity of controlling console
     private EntityUid? _shuttleEntity;
@@ -36,6 +38,7 @@ public sealed partial class NavScreen : BoxContainer
         IoCManager.InjectDependencies(this);
         _xformSystem = _entManager.System<SharedTransformSystem>();
         _sectorSystem = _entManager.System<SharedSectorSystem>();
+        _shuttles = _entManager.System<ShuttleSystem>();
 
         IFFToggle.OnToggled += OnIFFTogglePressed;
         IFFToggle.Pressed = NavRadar.ShowIFF;
@@ -128,6 +131,8 @@ public sealed partial class NavScreen : BoxContainer
 
         // Get the positive reduced angle.
         var displayRot = -worldRot.Reduced();
+
+        GridName.Text = _shuttles.GetIFFLabel(_shuttleEntity!.Value, true);
 
         GridPosition.Text = Loc.GetString("shuttle-console-position-value",
             ("X", $"{worldPos.X:0.0}"),

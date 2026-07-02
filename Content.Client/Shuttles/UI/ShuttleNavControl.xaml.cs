@@ -47,7 +47,7 @@ public sealed partial class ShuttleNavControl : BaseShuttleControl
     public bool ShowIFF { get; set; } = true;
     public bool ShowDocks { get; set; } = true;
     public bool RotateWithEntity { get; set; } = true;
-    public IFFSortMode SortMode { get; set; } = IFFSortMode.Other;
+    public IFFSortMode SortMode { get; set; } = IFFSortMode.Station | IFFSortMode.Ship | IFFSortMode.Other;
 
     private const float SortFadeMultiplier = 0.1f;
 

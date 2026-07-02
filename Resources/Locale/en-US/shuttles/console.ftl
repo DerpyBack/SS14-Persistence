@@ -9,6 +9,7 @@ shuttle-console-prevent = You are unable to pilot this ship
 
 shuttle-console-display-label = Display
 
+shuttle-console-name = IFF:
 shuttle-console-position = Position:
 shuttle-console-position-value = {$X}, {$Y}
 shuttle-console-sector = Current Sector:
