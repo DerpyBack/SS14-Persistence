@@ -1,6 +1,7 @@
 <controls:BoxContainer Visible="False"
        HorizontalExpand="True"
        xmlns:controls="https://spacestation14.io"
+       xmlns:gfx="clr-namespace:Robust.Client.Graphics;assembly=Robust.Client"
        xmlns:controls1="clr-namespace:Content.Client.UserInterface.Controls"
        xmlns:ui="clr-namespace:Content.Client.Shuttles.UI">
             <ui:ShuttleMapControl Name="MapRadar"
@@ -40,12 +41,19 @@
                     <controls:Label Name="HyperspaceLabel" Text="{controls:Loc 'shuttle-console-map-objects'}"
                            HorizontalAlignment="Center"/>
                 </controls1:StripeBack>
-                <controls:ScrollContainer VerticalExpand="True" HScrollEnabled="False"
-                                 ReturnMeasure="True">
-                    <controls:BoxContainer Name="HyperspaceDestinations"
-                                  Orientation="Vertical"
-                                  VerticalExpand="True"/>
-                </controls:ScrollContainer>
+                <controls:LineEdit
+                    Name="SearchBar"
+                    PlaceHolder="{controls:Loc 'shuttle-console-map-objects-search'}"
+                    HorizontalExpand="True">
+                </controls:LineEdit>
+                <controls:PanelContainer VerticalExpand="True">
+                    <controls:PanelContainer.PanelOverride>
+                        <gfx:StyleBoxFlat BackgroundColor="#1B1B1E" />
+                    </controls:PanelContainer.PanelOverride>
+                    <controls:ScrollContainer VerticalExpand="True" HScrollEnabled="False" ReturnMeasure="True">
+                        <controls:BoxContainer Name="HyperspaceDestinations" Orientation="Vertical" VerticalExpand="True" Margin="4"/>
+                    </controls:ScrollContainer>
+                </controls:PanelContainer>
             </controls:BoxContainer>
         </controls:BoxContainer>
 </controls:BoxContainer>

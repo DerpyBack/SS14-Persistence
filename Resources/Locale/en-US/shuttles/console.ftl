@@ -70,6 +70,7 @@ shuttle-console-map-beacons = Beacons
 shuttle-console-no-signal = No signal
 
 shuttle-console-map-objects = Sector objects
+shuttle-console-map-objects-search = Search
 
 # DOCK
 shuttle-console-docked = Docked objects

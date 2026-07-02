@@ -113,6 +113,8 @@ public sealed partial class MapScreen : BoxContainer
             SetSortModeFlags();
             FilterMapObjects();
         };
+
+        SearchBar.OnTextChanged += _ => FilterMapObjects();
     }
 
     public void UpdateState(ShuttleMapInterfaceState state)
@@ -394,20 +396,8 @@ public sealed partial class MapScreen : BoxContainer
             HorizontalExpand = true,
         };
 
-        var gridContainer = new BoxContainer()
-        {
-            Children =
-            {
-                new Control()
-                {
-                    MinWidth = 32f,
-                },
-                gridButton
-            }
-        };
-
-        _mapObjectControls.Add(gridContainer, mapObj);
-        HyperspaceDestinations.AddChild(gridContainer);
+        _mapObjectControls.Add(gridButton, mapObj);
+        HyperspaceDestinations.AddChild(gridButton);
 
         gridButton.OnPressed += args =>
         {
@@ -433,12 +423,13 @@ public sealed partial class MapScreen : BoxContainer
         {
             child.Orphan();
 
-            if (_mapObjectControls[child] is GridMapObject grid)
-            {
-                _entManager.TryGetComponent(grid.Entity, out IFFComponent? iffComp);
-                if (!_shuttles.MatchesSortTags(iffComp, MapRadar.SortMode))
-                    toRemove.Add(child);
-            }
+            if (_mapObjectControls[child] is not GridMapObject grid)
+                continue;
+
+            _entManager.TryGetComponent(grid.Entity, out IFFComponent? iffComp);
+            if (!_shuttles.MatchesSortTags(iffComp, MapRadar.SortMode)
+                || (SearchBar.Text.Trim().Length > 0 && !_mapObjectControls[child].Name.Contains(SearchBar.Text.Trim(), StringComparison.InvariantCultureIgnoreCase)))
+                toRemove.Add(child);
         }
 
         _sortChildren.RemoveAll(child => toRemove.Contains(child));
