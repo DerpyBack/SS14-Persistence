@@ -538,9 +538,12 @@
     - Carpets
     - Bedsheets
     - NFWallets # Frontier
+    - CivilianBags
+    - CommandBags
   - type: EmagLatheRecipes
     emagStaticPacks:
     - ClothingSyndie
+    - ContrabandBags
   - type: MaterialStorage
     whitelist: *StandardMaterialWhitelist
   - type: OreSiloClient
