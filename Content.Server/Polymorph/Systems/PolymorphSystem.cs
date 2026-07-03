@@ -7,7 +7,6 @@ using Content.Shared.Coordinates;
 using Content.Shared.Damage.Components;
 using Content.Shared.Damage.Systems;
 using Content.Shared.Destructible;
-using Content.Shared.FixedPoint;
 using Content.Shared.Hands.EntitySystems;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Mind;
@@ -44,11 +43,8 @@ public sealed partial class PolymorphSystem : EntitySystem
     [Dependency] private readonly SharedVisualBodySystem _visualBody = default!;
     [Dependency] private readonly SharedMindSystem _mindSystem = default!;
     [Dependency] private readonly MetaDataSystem _metaData = default!;
-    [Dependency] private ILogManager _log = default!;
 
     private const string RevertPolymorphId = "ActionRevertPolymorph";
-    /// <summary>Accumulator for the throttled per-tick debug dump below.</summary>
-    private float _debugDumpTimer;
 
     /// <summary>
     /// Tracks every currently-polymorphed entity ourselves, since EntityQueryEnumerator silently
