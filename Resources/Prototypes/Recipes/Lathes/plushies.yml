@@ -228,6 +228,15 @@
     Pyrotton: 500
 
 - type: latheRecipe
+  id: PlushieLlewellyn
+  result: PlushieLlewellyn
+  completetime: 5
+  materials:
+    Cloth: 500
+    Cotton: 1000
+    Plastic: 50
+
+- type: latheRecipe
   parent: BasePlushieRecipe
   id: ToyIan
   result: ToyIan

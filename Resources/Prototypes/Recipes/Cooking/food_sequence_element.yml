@@ -1564,7 +1564,15 @@
   scale: 0.8, 0.8
   name: food-sequence-cotton-burger-content-plushie-meera
   sprites:
-  - sprite: Objects/Fun/Plushies/meera.rsi
+  - sprite: _Persistence14/Objects/Fun/Plushies/Meera.rsi
+    state: icon
+
+- type: foodSequenceElement
+  id: PlushieLlewellyn
+  scale: 0.8, 0.8
+  name: food-sequence-cotton-burger-content-plushie-llewellyn
+  sprites:
+  - sprite: _Persistence14/Objects/Fun/Plushies/Llewellyn.rsi
     state: icon
 
 #Ian Toy
