@@ -46,10 +46,27 @@ public sealed partial class PolymorphSystem : EntitySystem
 
     private const string RevertPolymorphId = "ActionRevertPolymorph";
 
+    /// <summary>
+    /// Tracks every currently-polymorphed entity ourselves, since EntityQueryEnumerator silently
+    /// skips paused entities and we don't want to force them to stay awake just to be checked -
+    /// that would undo the whole point of NPCs going to sleep when idle. Added/removed via the
+    /// component's own lifecycle, so it stays accurate regardless of pause state.
+    /// </summary>
+    private readonly HashSet<EntityUid> _polymorphed = new();
+
+    /// <summary>
+    /// Reusable snapshot buffer. Revert() can remove entries from _polymorphed mid-iteration
+    /// (deleting the old entity fires ComponentShutdown), so iterating the live set directly
+    /// isn't safe - we copy it first each tick.
+    /// </summary>
+    private readonly List<EntityUid> _updateBuffer = new();
+
     public override void Initialize()
     {
         SubscribeLocalEvent<PolymorphableComponent, ComponentStartup>(OnComponentStartup);
         SubscribeLocalEvent<PolymorphedEntityComponent, MapInitEvent>(OnMapInit);
+        SubscribeLocalEvent<PolymorphedEntityComponent, ComponentStartup>(OnPolymorphedStartup);
+        SubscribeLocalEvent<PolymorphedEntityComponent, ComponentShutdown>(OnPolymorphedShutdown);
 
         SubscribeLocalEvent<PolymorphableComponent, PolymorphActionEvent>(OnPolymorphActionEvent);
         SubscribeLocalEvent<PolymorphedEntityComponent, RevertPolymorphActionEvent>(OnRevertPolymorphActionEvent);
@@ -61,13 +78,31 @@ public sealed partial class PolymorphSystem : EntitySystem
         InitializeMap();
     }
 
+    private void OnPolymorphedStartup(Entity<PolymorphedEntityComponent> ent, ref ComponentStartup args)
+    {
+        _polymorphed.Add(ent);
+    }
+
+    private void OnPolymorphedShutdown(Entity<PolymorphedEntityComponent> ent, ref ComponentShutdown args)
+    {
+        _polymorphed.Remove(ent);
+    }
+
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
+        if (_polymorphed.Count == 0)
+            return;
 
-        var query = EntityQueryEnumerator<PolymorphedEntityComponent>();
-        while (query.MoveNext(out var uid, out var comp))
+        // Snapshot first - Revert() can remove entries from _polymorphed mid-loop.
+        _updateBuffer.Clear();
+        _updateBuffer.AddRange(_polymorphed);
+
+        foreach (var uid in _updateBuffer)
         {
+            if (!TryComp<PolymorphedEntityComponent>(uid, out var comp) || comp.Reverted)
+                continue;
+
             comp.Time += frameTime;
 
             if (comp.Configuration.Duration != null && comp.Time >= comp.Configuration.Duration)
@@ -82,7 +117,7 @@ public sealed partial class PolymorphSystem : EntitySystem
             if (comp.Configuration.RevertOnDeath && _mobState.IsDead(uid, mob) ||
                 comp.Configuration.RevertOnCrit && _mobState.IsIncapacitated(uid, mob))
             {
-                Revert((uid, comp));
+                var result = Revert((uid, comp));
             }
         }
     }
@@ -145,7 +180,7 @@ public sealed partial class PolymorphSystem : EntitySystem
         if (ent.Comp.Reverted || !ent.Comp.Configuration.RevertOnDeath)
             return;
 
-        Revert((ent, ent));
+        var result = Revert((ent, ent));
     }
 
     private void OnPolymorphedTerminating(Entity<PolymorphedEntityComponent> ent, ref EntityTerminatingEvent args)
@@ -154,7 +189,9 @@ public sealed partial class PolymorphSystem : EntitySystem
             return;
 
         if (ent.Comp.Configuration.RevertOnDelete)
-            Revert(ent.AsNullable());
+        {
+            var result = Revert(ent.AsNullable());
+        }
 
         // Remove our original entity too
         // Note that Revert will set Parent to null, so reverted entities will not be deleted
@@ -181,9 +218,12 @@ public sealed partial class PolymorphSystem : EntitySystem
     public EntityUid? PolymorphEntity(EntityUid uid, PolymorphConfiguration configuration)
     {
         // If they're morphed, check their current config to see if they can be
-        // morphed again
+        // morphed again. TryComp is called unconditionally (rather than inline in the &&
+        // chain) so currentPoly is always definitely-assigned for later use tracking chained
+        // re-polymorphs, regardless of whether IgnoreAllowRepeatedMorphs short-circuits this.
+        TryComp<PolymorphedEntityComponent>(uid, out var currentPoly);
         if (!configuration.IgnoreAllowRepeatedMorphs
-            && TryComp<PolymorphedEntityComponent>(uid, out var currentPoly)
+            && currentPoly != null
             && !currentPoly.Configuration.AllowRepeatedMorphs)
             return null;
 
@@ -212,8 +252,16 @@ public sealed partial class PolymorphSystem : EntitySystem
 
         _mindSystem.MakeSentient(child);
 
+        // If uid is itself already a polymorphed form (a chained re-polymorph), the new form's Parent must point at the
+        // TRUE original entity, not this intermediate form - otherwise each further re-polymorph
+        // only remembers one link back, and Revert() eventually unwinds to some intermediate
+        // creature instead of all the way back to what the victim actually started as.
+        var trueOriginal = uid;
+        if (currentPoly != null && currentPoly.Parent != null)
+            trueOriginal = currentPoly.Parent.Value;
+
         var polymorphedComp = Factory.GetComponent<PolymorphedEntityComponent>();
-        polymorphedComp.Parent = uid;
+        polymorphedComp.Parent = trueOriginal;
         polymorphedComp.Configuration = configuration;
         AddComp(child, polymorphedComp);
 
@@ -268,10 +316,22 @@ public sealed partial class PolymorphSystem : EntitySystem
         if (_mindSystem.TryGetMind(uid, out var mindId, out var mind))
             _mindSystem.TransferTo(mindId, child, mind: mind);
 
-        //Ensures a map to banish the entity to
-        EnsurePausedMap();
-        if (PausedMap != null)
-            _transform.SetParent(uid, targetTransformComp, PausedMap.Value);
+        if (currentPoly != null)
+        {
+            // uid was itself an intermediate polymorph form - the true original is already
+            // safely parked from the very first polymorph in this chain, so this husk serves
+            // no purpose anymore. Mark it Reverted first so OnPolymorphedTerminating doesn't
+            // try to revert it a second time
+            currentPoly.Reverted = true;
+            QueueDel(uid);
+        }
+        else
+        {
+            //Ensures a map to banish the entity to
+            EnsurePausedMap();
+            if (PausedMap != null)
+                _transform.SetParent(uid, targetTransformComp, PausedMap.Value);
+        }
 
         // Raise an event to inform anything that wants to know about the entity swap
         var ev = new PolymorphedEvent(uid, child, false);
@@ -293,23 +353,32 @@ public sealed partial class PolymorphSystem : EntitySystem
     {
         var (uid, component) = ent;
         if (!Resolve(ent, ref component))
+        {
             return null;
+        }
 
         if (Deleted(uid))
+        {
             return null;
+        }
 
         if (component.Parent is not { } parent)
+        {
             return null;
+        }
 
         if (Deleted(parent))
+        {
             return null;
+        }
 
         var uidXform = Transform(uid);
         var parentXform = Transform(parent);
 
-        // Don't swap back onto a terminating grid
         if (TerminatingOrDeleted(uidXform.ParentUid))
+        {
             return null;
+        }
 
         if (component.Configuration.ExitPolymorphSound != null)
             _audio.PlayPvs(component.Configuration.ExitPolymorphSound, uidXform.Coordinates);
