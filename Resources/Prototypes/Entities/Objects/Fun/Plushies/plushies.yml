@@ -1316,6 +1316,62 @@
 
 - type: entity
   parent: BasePlushie
+  id: PlushieCade
+  name: Cade plushie
+  description: The all new Cade Blabar Plush(tm) now with real nutrient paste included.
+  components:
+  - type: Sprite
+    sprite: _Persistence14/Objects/Fun/Plushies/Cade.rsi
+    state: icon
+  - type: EmitSoundOnUse
+    sound: &PlushieCadeSound
+      path: /Audio/Voice/Slime/slime_squish.ogg
+      params:
+        volume: -5
+  - type: EmitSoundOnLand
+    sound: *PlushieCadeSound
+  - type: EmitSoundOnActivate
+    sound: *PlushieCadeSound
+  - type: EmitSoundOnTrigger
+    sound: *PlushieCadeSound
+  - type: Edible
+    requiresSpecialDigestion: true
+    useSound:
+      path: /Audio/Voice/Human/wilhelm_scream.ogg
+      params:
+        volume: -10
+    transferAmount: 10
+  - type: Extractable
+    juiceSolution:
+      reagents:
+      - ReagentId: Vitamin
+        Quantity: 30
+  - type: SolutionContainerManager
+    solutions:
+      food:
+        maxVol: 20
+        reagents:
+        - ReagentId: Fiber
+          Quantity: 10
+        - ReagentId: Vitamin
+          Quantity: 10
+
+  - type: MeleeWeapon
+    soundHit: *PlushieLlewellynSound
+  - type: Clothing
+    quickEquip: false
+    sprite: _Persistence14/Objects/Fun/Plushies/Cade.rsi
+    slots:
+    - HEAD
+    clothingVisuals:
+      head:
+      - state: equipped-HELMET
+  - type: FoodSequenceElement
+    entries:
+      CottonBurger: PlushieCade
+
+- type: entity
+  parent: BasePlushie
   id: ToyIan
   name: ian toy
   description: Unable to eat, but just as fluffy as the real guy!
