@@ -33,6 +33,8 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
 
     public bool ShowBeacons = true;
     public MapId ViewingMap = MapId.Nullspace;
+    public Vector2? WaypointCoords = null;
+
     public IFFSortMode SortMode { get; set; } = IFFSortMode.Station | IFFSortMode.Ship | IFFSortMode.Other;
 
     private const float SortFadeMultiplier = 0.1f;
@@ -269,7 +271,7 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
 
         var matScale = Matrix3x2.CreateScale(MinimapScale);
         matScale.Translation = MidPointVector;
-        var worldToView = Matrix3x2.CreateTranslation(Offset with { X = -Offset.X }) * matScale;
+        var worldToView = Matrix3x2.CreateScale(new Vector2(1, -1)) * Matrix3x2.CreateTranslation(Offset with { X = -Offset.X }) * matScale;
 
         var realTime = _timing.RealTime;
         var viewBox = new Box2(Offset - WorldRangeVector, Offset + WorldRangeVector);
@@ -500,6 +502,30 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
 
                     handle.DrawLine(mouseLocalPos, ftlEnd, color);
                 }
+            }
+        }
+
+        //Draw dotted line from shuttle to waypoint
+        if(WaypointCoords != null)
+        {
+            if (_shuttleEntity != null &&
+                EntManager.TryGetComponent(_shuttleEntity, out TransformComponent? shuttleXform) &&
+                shuttleXform.MapID != MapId.Nullspace)
+            {
+                var (gridPos, gridRot) = _xformSystem.GetWorldPositionRotation(shuttleXform);
+                gridPos = Maps.GetGridPosition(_shuttleEntity.Value, gridPos, gridRot);
+
+                /*var gridRelativePos = Vector2.Transform(gridPos, matty);
+                gridRelativePos = gridRelativePos with { Y = -gridRelativePos.Y };
+                var gridUiPos = ScalePosition(gridRelativePos);#1#*/
+
+                gridPos = Vector2.Transform(gridPos, worldToView);
+
+                var waypoint = Vector2.Transform(WaypointCoords.Value, worldToView);
+
+
+                handle.DrawDottedLine(gridPos, waypoint, Color.White, (float)realTime.TotalSeconds * 30f);
+                handle.DrawCircle(waypoint, 10, Color.White, false);
             }
         }
 

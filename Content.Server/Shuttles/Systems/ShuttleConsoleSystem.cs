@@ -69,6 +69,7 @@ public sealed partial class ShuttleConsoleSystem : SharedShuttleConsoleSystem
             subs.Event<ShuttleConsoleFTLBeaconMessage>(OnBeaconFTLMessage);
             subs.Event<ShuttleConsoleFTLPositionMessage>(OnPositionFTLMessage);
             subs.Event<ShuttleConsoleDampingMessage>(OnDampingMessage);
+            subs.Event<ShuttleConsoleWaypointMessage>(OnWaypointMessage);
             subs.Event<BoundUIClosedEvent>(OnConsoleUIClose);
             subs.Event<BoundUIOpenedEvent>(OnConsoleUIOpen);
         });
@@ -571,5 +572,10 @@ public sealed partial class ShuttleConsoleSystem : SharedShuttleConsoleSystem
 
         _shuttle.SetDampingMode(gridUid, args.DampingMode);
         RefreshShuttleConsoles(gridUid);
+    }
+
+    private void OnWaypointMessage(Entity<ShuttleConsoleComponent> ent, ref ShuttleConsoleWaypointMessage args)
+    {
+        ent.Comp.Waypoint = args.Coords;
     }
 }

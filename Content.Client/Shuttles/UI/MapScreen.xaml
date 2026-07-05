@@ -41,6 +41,15 @@
                     <controls:Label Name="HyperspaceLabel" Text="{controls:Loc 'shuttle-console-map-objects'}"
                            HorizontalAlignment="Center"/>
                 </controls1:StripeBack>
+                <controls:BoxContainer Orientation="Horizontal">
+                    <controls:Label Text="{controls:Loc 'shuttle-console-waypoint'}"/>
+                    <controls:Label Name="WaypointCoords"
+                                    Text="0.0, 0.0"
+                                    HorizontalExpand="True"
+                                    Align="Right"
+                                    Margin="16 0"/>
+                    <controls:Button Name="WaypointButton" Text="Place"/>
+                </controls:BoxContainer>
                 <controls:LineEdit
                     Name="SearchBar"
                     PlaceHolder="{controls:Loc 'shuttle-console-map-objects-search'}"

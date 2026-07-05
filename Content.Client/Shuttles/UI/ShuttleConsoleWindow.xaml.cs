@@ -25,6 +25,7 @@ public sealed partial class ShuttleConsoleWindow : FancyWindow,
     public event Action<NetEntity>? UndockRequest;
     public event Action? UndockAllRequest;
     public Action<ShuttleDampingMode>? OnDampingModeChanged;
+    public Action<Vector2?>? OnWaypointChanged;
 
     public ShuttleConsoleWindow()
     {
@@ -54,6 +55,11 @@ public sealed partial class ShuttleConsoleWindow : FancyWindow,
         MapContainer.RequestBeaconFTL += (ent, angle) =>
         {
             RequestBeaconFTL?.Invoke(ent, angle);
+        };
+
+        MapContainer.OnWaypointChanged += coords =>
+        {
+            OnWaypointChanged?.Invoke(coords);
         };
 
         DockContainer.DockRequest += (entity, netEntity) =>

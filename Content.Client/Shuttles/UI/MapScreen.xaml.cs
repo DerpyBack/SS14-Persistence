@@ -66,6 +66,8 @@ public sealed partial class MapScreen : BoxContainer
 
     private List<Control> _sortChildren = new();
 
+    public Action<Vector2?>? OnWaypointChanged;
+
     public MapScreen()
     {
         RobustXamlLoader.Load(this);
@@ -113,6 +115,8 @@ public sealed partial class MapScreen : BoxContainer
             SetSortModeFlags();
             FilterMapObjects();
         };
+
+        WaypointButton.OnPressed += _ => OnWaypointButtonPressed();
 
         SearchBar.OnTextChanged += _ => FilterMapObjects();
     }
@@ -219,6 +223,12 @@ public sealed partial class MapScreen : BoxContainer
             var mapPos = _xformSystem.GetMapCoordinates(_shuttleEntity.Value);
             MapRadar.SetMap(mapPos.MapId);
         }
+    }
+
+    private void OnWaypointButtonPressed()
+    {
+        MapRadar.WaypointCoords = null;
+        OnWaypointChanged?.Invoke(null);
     }
 
     /// <summary>
@@ -373,8 +383,8 @@ public sealed partial class MapScreen : BoxContainer
 
         var coordinates = _shuttles.GetMapCoordinates(mapObject);
 
-        // If it's our map then scroll, otherwise just set position there.
-        MapRadar.SetMap(coordinates.MapId, recentering: true);
+        MapRadar.WaypointCoords = coordinates.Position;
+        OnWaypointChanged?.Invoke(coordinates.Position);
     }
 
     public void SetMap(MapId mapId)
@@ -481,6 +491,20 @@ public sealed partial class MapScreen : BoxContainer
     protected override void Draw(DrawingHandleScreen handle)
     {
         MapRadar.SetMapObjects(_mapObjects);
+
+        if (MapRadar.WaypointCoords is null)
+        {
+            WaypointCoords.Text = Loc.GetString("shuttle-console-waypoint-not-set");
+            WaypointButton.Text = Loc.GetString("shuttle-console-waypoint-place");
+        }
+        else
+        {
+            WaypointCoords.Text = Loc.GetString("shuttle-console-position-value",
+                ("X", $"{MapRadar.WaypointCoords!.Value.X:0.0}"),
+                ("Y", $"{MapRadar.WaypointCoords!.Value.Y:0.0}"));
+            WaypointButton.Text = Loc.GetString("shuttle-console-waypoint-clear");
+        }
+
         base.Draw(handle);
     }
 
@@ -489,6 +513,11 @@ public sealed partial class MapScreen : BoxContainer
         if (_entManager.TryGetComponent(_shuttleEntity, out TransformComponent? shuttleXform))
         {
             SetMap(shuttleXform.MapID);
+        }
+
+        if (_entManager.TryGetComponent(_console, out ShuttleConsoleComponent? console))
+        {
+            MapRadar.WaypointCoords = console.Waypoint;
         }
 
         PingMap();

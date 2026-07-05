@@ -73,6 +73,11 @@ shuttle-console-no-signal = No signal
 shuttle-console-map-objects = Sector objects
 shuttle-console-map-objects-search = Search
 
+shuttle-console-waypoint = Waypoint
+shuttle-console-waypoint-not-set = Not set
+shuttle-console-waypoint-clear = Clear
+shuttle-console-waypoint-place = Place
+
 # DOCK
 shuttle-console-docked = Docked objects
 
