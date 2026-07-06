@@ -329,7 +329,7 @@ namespace Content.Client.Chemistry.UI
             bufferHBox.AddChild(bufferLabel);
             var bufferVol = new Label
             {
-                Text = $"{_bufferReagents.Sum(x => x.Quantity.Value)}u",
+                Text = $"{_bufferReagents.Sum(x => x.Quantity.Int())}u",
                 StyleClasses = { StyleClass.LabelWeak }
             };
             bufferHBox.AddChild(bufferVol);
