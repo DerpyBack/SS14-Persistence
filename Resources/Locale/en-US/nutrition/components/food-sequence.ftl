@@ -160,6 +160,8 @@ food-sequence-cotton-burger-content-plushie-vulp = vulp
 food-sequence-cotton-burger-content-plushie-meera = meera
 food-sequence-cotton-burger-content-plushie-llewellyn = llewellyn
 food-sequence-cotton-burger-content-plushie-cade = cade
+food-sequence-cotton-burger-content-plushie-dawn = dawn
+food-sequence-cotton-burger-content-plushie-ana = ana
 food-sequence-cotton-burger-content-plushie-ian = corgi
 food-sequence-cotton-burger-content-among-pequeno = sus
 

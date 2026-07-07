@@ -1585,6 +1585,24 @@
   - sprite: _Persistence14/Objects/Fun/Plushies/Cade.rsi
     state: icon
 
+#Dawn Plushie
+- type: foodSequenceElement
+  id: PlushieDawn
+  scale: 0.8, 0.8
+  name: food-sequence-cotton-burger-content-plushie-dawn
+  sprites:
+  - sprite: _Persistence14/Objects/Fun/Plushies/Dawn.rsi
+    state: icon
+
+#Ana Plushie
+- type: foodSequenceElement
+  id: PlushieAna
+  scale: 0.8, 0.8
+  name: food-sequence-cotton-burger-content-plushie-ana
+  sprites:
+  - sprite: _Persistence14/Objects/Fun/Plushies/Ana.rsi
+    state: icon
+
 #Ian Toy
 
 - type: foodSequenceElement
