@@ -12,6 +12,7 @@ namespace Content.Shared.Shuttles.Components
     {
         public static string DiskSlotName = "disk_slot";
 
+        [ViewVariables(VVAccess.ReadWrite)]
         public Vector2? Waypoint = null;
     }
 

@@ -10,6 +10,7 @@ using Robust.Client.Graphics;
 using Robust.Client.ResourceManagement;
 using Robust.Client.UserInterface.XAML;
 using Robust.Shared.Configuration;
+using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Physics;
 using Robust.Shared.Prototypes;
@@ -29,6 +30,8 @@ public partial class BaseShuttleControl : MapGridControl
     [Dependency] private readonly IParallelManager _parallel = default!;
     [Dependency] private readonly IConfigurationManager _configuration = default!;
     [Dependency] private readonly IPrototypeManager _prototypes = default!;
+    [Dependency] private readonly IGameTiming _timing = default!;
+    private readonly SharedTransformSystem _xformSystem;
 
     protected readonly SharedMapSystem Maps;
 
@@ -60,6 +63,7 @@ public partial class BaseShuttleControl : MapGridControl
     {
         RobustXamlLoader.Load(this);
         Maps = EntManager.System<SharedMapSystem>();
+        _xformSystem = EntManager.System<SharedTransformSystem>();
         Font = new VectorFont(IoCManager.Resolve<IResourceCache>().GetResource<FontResource>("/Fonts/NotoSans/NotoSans-Regular.ttf"), 12);
 
         _drawJob = new GridDrawJob()
@@ -313,6 +317,29 @@ public partial class BaseShuttleControl : MapGridControl
         else
         {
             DrawSectorBoundaries(handle, worldToView, _configuration.GetCVar(CCVars.SectorMaxRadius));
+        }
+    }
+
+    //Draw dotted line from shuttle to waypoint
+    internal void DrawWaypoint(DrawingHandleScreen handle,
+        Matrix3x2 worldToView,
+        Vector2? waypointCoords,
+        EntityUid? shuttle)
+    {
+        if(waypointCoords != null
+           && shuttle != null &&
+           EntManager.TryGetComponent(shuttle, out TransformComponent? shuttleXform) &&
+           shuttleXform.MapID != MapId.Nullspace)
+        {
+            var (gridPos, gridRot) = _xformSystem.GetWorldPositionRotation(shuttleXform);
+            gridPos = Maps.GetGridPosition(shuttle.Value, gridPos, gridRot);
+
+            gridPos = Vector2.Transform(gridPos, worldToView);
+
+            var waypoint = Vector2.Transform(waypointCoords.Value, worldToView);
+
+            handle.DrawDottedLine(gridPos, waypoint, Color.White, (float)_timing.RealTime.TotalSeconds * 30f);
+            handle.DrawCircle(waypoint, 10, Color.White, false);
         }
     }
 

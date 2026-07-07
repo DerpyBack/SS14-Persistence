@@ -48,6 +48,7 @@ public sealed partial class ShuttleNavControl : BaseShuttleControl
     public bool ShowDocks { get; set; } = true;
     public bool RotateWithEntity { get; set; } = true;
     public IFFSortMode SortMode { get; set; } = IFFSortMode.Station | IFFSortMode.Ship | IFFSortMode.Other;
+    public Vector2? WaypointCoords = null;
 
     private const float SortFadeMultiplier = 0.1f;
 
@@ -131,6 +132,8 @@ public sealed partial class ShuttleNavControl : BaseShuttleControl
         ActualRadarRange = Math.Clamp(ActualRadarRange, WorldMinRange, WorldMaxRange);
 
         RotateWithEntity = state.RotateWithEntity;
+
+        WaypointCoords = state.Waypoint;
 
         _docks = state.Docks;
         SectorWeatherEvents = state.SectorWeatherEvents;
@@ -323,6 +326,7 @@ public sealed partial class ShuttleNavControl : BaseShuttleControl
 
         DrawTrackedEntities(handle, worldToView, xform.MapID);
 
+        DrawWaypoint(handle, worldToView, WaypointCoords, ourGridId);
     }
 
     private void DrawTrackedEntities(DrawingHandleScreen handle, Matrix3x2 worldToView, MapId mapId)

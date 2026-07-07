@@ -505,29 +505,7 @@ public sealed partial class ShuttleMapControl : BaseShuttleControl
             }
         }
 
-        //Draw dotted line from shuttle to waypoint
-        if(WaypointCoords != null)
-        {
-            if (_shuttleEntity != null &&
-                EntManager.TryGetComponent(_shuttleEntity, out TransformComponent? shuttleXform) &&
-                shuttleXform.MapID != MapId.Nullspace)
-            {
-                var (gridPos, gridRot) = _xformSystem.GetWorldPositionRotation(shuttleXform);
-                gridPos = Maps.GetGridPosition(_shuttleEntity.Value, gridPos, gridRot);
-
-                /*var gridRelativePos = Vector2.Transform(gridPos, matty);
-                gridRelativePos = gridRelativePos with { Y = -gridRelativePos.Y };
-                var gridUiPos = ScalePosition(gridRelativePos);#1#*/
-
-                gridPos = Vector2.Transform(gridPos, worldToView);
-
-                var waypoint = Vector2.Transform(WaypointCoords.Value, worldToView);
-
-
-                handle.DrawDottedLine(gridPos, waypoint, Color.White, (float)realTime.TotalSeconds * 30f);
-                handle.DrawCircle(waypoint, 10, Color.White, false);
-            }
-        }
+        DrawWaypoint(handle, worldToView, WaypointCoords, _shuttleEntity);
 
         // Draw the coordinates
         var mapOffset = MidPointVector;

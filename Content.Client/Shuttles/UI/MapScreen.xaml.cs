@@ -217,6 +217,11 @@ public sealed partial class MapScreen : BoxContainer
 
     public void SetConsole(EntityUid? console)
     {
+        if (_console != console && _entManager.TryGetComponent(_console, out ShuttleConsoleComponent? comp))
+        {
+            UpdateWaypoint(comp.Waypoint);
+        }
+
         _console = console;
     }
 
@@ -470,11 +475,6 @@ public sealed partial class MapScreen : BoxContainer
 
         _sortChildren.RemoveAll(child => toRemove.Contains(child));
 
-        /*_sortChildren.RemoveAll(child =>
-            _mapObjectControls[child] is GridMapObject grid
-            && _entManager.TryGetComponent(grid.Entity, out IFFComponent? iffComp)
-            && _shuttles.MatchesSortTags(iffComp, MapRadar.SortMode));*/
-
         if (_sortChildren.Count > 1)
         {
             _sortChildren.Sort((x, y) =>
@@ -526,11 +526,6 @@ public sealed partial class MapScreen : BoxContainer
         if (_entManager.TryGetComponent(_shuttleEntity, out TransformComponent? shuttleXform))
         {
             SetMap(shuttleXform.MapID);
-        }
-
-        if (_entManager.TryGetComponent(_console, out ShuttleConsoleComponent? console))
-        {
-            UpdateWaypoint(console.Waypoint);
         }
 
         PingMap();

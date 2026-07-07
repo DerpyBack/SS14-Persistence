@@ -1,3 +1,4 @@
+using System.Numerics;
 using Content.Server.Power.EntitySystems;
 using Content.Server.Sectors.Components;
 using Content.Server.Sectors.Events;
@@ -429,14 +430,20 @@ public sealed partial class ShuttleConsoleSystem : SharedShuttleConsoleSystem
     public NavInterfaceState GetNavState(Entity<RadarConsoleComponent?, TransformComponent?> entity, Dictionary<NetEntity, List<DockingPortState>> docks)
     {
         var damping = ShuttleDampingMode.Normal;
+        Vector2? waypoint = null;
 
         if (entity.Comp2?.GridUid is { } gridUid && TryComp<ShuttleComponent>(gridUid, out var shuttle))
         {
             damping = shuttle.DampingMode;
         }
 
+        if (TryComp<ShuttleConsoleComponent>(entity, out var console))
+        {
+            waypoint = console.Waypoint;
+        }
+
         if (!Resolve(entity, ref entity.Comp1, ref entity.Comp2))
-            return new NavInterfaceState(entity.Comp1!.MaxRange, null, null, docks, damping, _sectorWeather.GetHazardWeatherSnapshot());
+            return new NavInterfaceState(entity.Comp1!.MaxRange, null, null, docks, damping, _sectorWeather.GetHazardWeatherSnapshot(), null, waypoint);
 
         return GetNavState(
             entity,
@@ -452,10 +459,16 @@ public sealed partial class ShuttleConsoleSystem : SharedShuttleConsoleSystem
         Angle angle)
     {
         var damping = ShuttleDampingMode.Normal;
+        Vector2? waypoint = null;
 
         if (entity.Comp2?.GridUid is { } gridUid && TryComp<ShuttleComponent>(gridUid, out var shuttle))
         {
             damping = shuttle.DampingMode;
+        }
+
+        if (TryComp<ShuttleConsoleComponent>(entity, out var console))
+        {
+            waypoint = console.Waypoint;
         }
 
         if (!Resolve(entity, ref entity.Comp1, ref entity.Comp2))
@@ -470,7 +483,8 @@ public sealed partial class ShuttleConsoleSystem : SharedShuttleConsoleSystem
             docks,
             damping,
             _sectorWeather.GetHazardWeatherSnapshot(),
-            trackedEntities);
+            trackedEntities,
+            waypoint);
     }
 
     private List<NavTrackedEntityState> GetTrackedEntities(EntityCoordinates radarCoordinates)
@@ -577,5 +591,8 @@ public sealed partial class ShuttleConsoleSystem : SharedShuttleConsoleSystem
     private void OnWaypointMessage(Entity<ShuttleConsoleComponent> ent, ref ShuttleConsoleWaypointMessage args)
     {
         ent.Comp.Waypoint = args.Coords;
+
+        DockingInterfaceState? dockState = null;
+        UpdateState(ent, ref dockState);
     }
 }

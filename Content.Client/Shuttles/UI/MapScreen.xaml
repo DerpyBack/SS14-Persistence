@@ -38,9 +38,9 @@
 
                 <controls:Label Text="{controls:Loc 'shuttle-console-waypoint'}" HorizontalExpand="True"/>
                 <controls:BoxContainer Orientation="Horizontal">
-                    <controls:LineEdit Name="WaypointCoordsX" HorizontalExpand="True" Text="0.0"/>
+                    <controls:LineEdit Name="WaypointCoordsX" HorizontalExpand="True"/>
                     <controls:Label Text=", "/>
-                    <controls:LineEdit Name="WaypointCoordsY" HorizontalExpand="True" Text="0.0"/>
+                    <controls:LineEdit Name="WaypointCoordsY" HorizontalExpand="True"/>
                     <controls:Button Name="WaypointButton" Margin="10 0 0 0" Text="{controls:Loc 'shuttle-console-waypoint-clear'}"/>
                 </controls:BoxContainer>
 
