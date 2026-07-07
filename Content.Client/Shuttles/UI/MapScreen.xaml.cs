@@ -116,7 +116,21 @@ public sealed partial class MapScreen : BoxContainer
             FilterMapObjects();
         };
 
-        WaypointButton.OnPressed += _ => OnWaypointButtonPressed();
+        WaypointCoordsX.OnTextEntered += args =>
+        {
+            if (int.TryParse(args.Text, out var amount))
+            {
+                UpdateWaypoint(new Vector2(amount, MapRadar.WaypointCoords?.Y ?? 0));
+            }
+        };
+        WaypointCoordsY.OnTextEntered += args =>
+        {
+            if (int.TryParse(args.Text, out var amount))
+            {
+                UpdateWaypoint(new Vector2(MapRadar.WaypointCoords?.X ?? 0, amount));
+            }
+        };
+        WaypointButton.OnPressed += _ => UpdateWaypoint(null);
 
         SearchBar.OnTextChanged += _ => FilterMapObjects();
     }
@@ -223,12 +237,6 @@ public sealed partial class MapScreen : BoxContainer
             var mapPos = _xformSystem.GetMapCoordinates(_shuttleEntity.Value);
             MapRadar.SetMap(mapPos.MapId);
         }
-    }
-
-    private void OnWaypointButtonPressed()
-    {
-        MapRadar.WaypointCoords = null;
-        OnWaypointChanged?.Invoke(null);
     }
 
     /// <summary>
@@ -383,8 +391,26 @@ public sealed partial class MapScreen : BoxContainer
 
         var coordinates = _shuttles.GetMapCoordinates(mapObject);
 
-        MapRadar.WaypointCoords = coordinates.Position;
-        OnWaypointChanged?.Invoke(coordinates.Position);
+        UpdateWaypoint(coordinates.Position);
+    }
+
+    private void UpdateWaypoint(Vector2? coords)
+    {
+        MapRadar.WaypointCoords = coords;
+        OnWaypointChanged?.Invoke(coords);
+
+        if (MapRadar.WaypointCoords is null)
+        {
+            WaypointCoordsX.Text = "";
+            WaypointCoordsY.Text = "";
+            WaypointButton.Disabled = true;
+        }
+        else
+        {
+            WaypointCoordsX.Text = coords!.Value.X.ToString("0.0");
+            WaypointCoordsY.Text = coords!.Value.Y.ToString("0.0");
+            WaypointButton.Disabled = false;
+        }
     }
 
     public void SetMap(MapId mapId)
@@ -492,19 +518,6 @@ public sealed partial class MapScreen : BoxContainer
     {
         MapRadar.SetMapObjects(_mapObjects);
 
-        if (MapRadar.WaypointCoords is null)
-        {
-            WaypointCoords.Text = Loc.GetString("shuttle-console-waypoint-not-set");
-            WaypointButton.Text = Loc.GetString("shuttle-console-waypoint-place");
-        }
-        else
-        {
-            WaypointCoords.Text = Loc.GetString("shuttle-console-position-value",
-                ("X", $"{MapRadar.WaypointCoords!.Value.X:0.0}"),
-                ("Y", $"{MapRadar.WaypointCoords!.Value.Y:0.0}"));
-            WaypointButton.Text = Loc.GetString("shuttle-console-waypoint-clear");
-        }
-
         base.Draw(handle);
     }
 
@@ -517,7 +530,7 @@ public sealed partial class MapScreen : BoxContainer
 
         if (_entManager.TryGetComponent(_console, out ShuttleConsoleComponent? console))
         {
-            MapRadar.WaypointCoords = console.Waypoint;
+            UpdateWaypoint(console.Waypoint);
         }
 
         PingMap();

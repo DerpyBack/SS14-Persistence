@@ -36,20 +36,19 @@
                     <controls:CheckBox Name="FilterOther" Text="{controls:Loc 'shuttle-console-sort-other'}" />
                 </controls:BoxContainer>
 
+                <controls:Label Text="{controls:Loc 'shuttle-console-waypoint'}" HorizontalExpand="True"/>
+                <controls:BoxContainer Orientation="Horizontal">
+                    <controls:LineEdit Name="WaypointCoordsX" HorizontalExpand="True" Text="0.0"/>
+                    <controls:Label Text=", "/>
+                    <controls:LineEdit Name="WaypointCoordsY" HorizontalExpand="True" Text="0.0"/>
+                    <controls:Button Name="WaypointButton" Margin="10 0 0 0" Text="{controls:Loc 'shuttle-console-waypoint-clear'}"/>
+                </controls:BoxContainer>
+
                 <!-- Map objects -->
                 <controls1:StripeBack MinSize="48 48">
                     <controls:Label Name="HyperspaceLabel" Text="{controls:Loc 'shuttle-console-map-objects'}"
                            HorizontalAlignment="Center"/>
                 </controls1:StripeBack>
-                <controls:BoxContainer Orientation="Horizontal">
-                    <controls:Label Text="{controls:Loc 'shuttle-console-waypoint'}"/>
-                    <controls:Label Name="WaypointCoords"
-                                    Text="0.0, 0.0"
-                                    HorizontalExpand="True"
-                                    Align="Right"
-                                    Margin="16 0"/>
-                    <controls:Button Name="WaypointButton" Text="Place"/>
-                </controls:BoxContainer>
                 <controls:LineEdit
                     Name="SearchBar"
                     PlaceHolder="{controls:Loc 'shuttle-console-map-objects-search'}"
