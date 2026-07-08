@@ -41,6 +41,20 @@
   objectType: Structure
   placementMode: SnapgridCenter
   canBuildInImpassable: true
+  conditions:
+  - !type:WallmountCondition {}
+
+- type: construction
+  id: APCv2
+  graph: APC
+  startNode: start
+  targetNode: apcv2
+  category: construction-category-utilities
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: true
+  conditions:
+  - !type:WallmountCondition {}
 
 - type: construction
   id: CableTerminal

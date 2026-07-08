@@ -133,7 +133,10 @@
     materialComposition:
       Steel: 100
       Plastic: 100
-
+  - type: Tag
+    tags:
+      - PowerCellMedium
+      
 - type: entity
   id: PowerCellMediumPrinted
   suffix: Empty
