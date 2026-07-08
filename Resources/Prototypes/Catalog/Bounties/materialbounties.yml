@@ -106,11 +106,11 @@
 
 - type: cargoBounty
   id: BountyUranium
-  reward: 265
+  reward: 333
   description: bounty-description-uranium
   entries:
     - name: bounty-item-uranium
-      amount: 35
+      amount: 30
       whitelist:
         tags:
         - Uranium
@@ -123,7 +123,7 @@
   description: bounty-description-titanium
   entries:
     - name: bounty-item-titanium
-      amount: 30
+      amount: 100
       whitelist:
         tags:
         - Titanium
