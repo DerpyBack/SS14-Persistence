@@ -118,6 +118,19 @@
   group: MaterialBounty
 
 - type: cargoBounty
+  id: BountyTitanium
+  reward: 100
+  description: bounty-description-titanium
+  entries:
+    - name: bounty-item-titanium
+      amount: 30
+      whitelist:
+        tags:
+        - Titanium
+  bountyType: PayPer
+  group: MaterialBounty
+
+- type: cargoBounty
   id: BountyBananium
   reward: 500
   description: bounty-description-bananium
@@ -127,6 +140,19 @@
       whitelist:
         tags:
         - Bananium
+  bountyType: PayPer
+  group: MaterialBounty
+
+- type: cargoBounty
+  id: BountyPhoronAlloy
+  reward: 500
+  description: bounty-description-phoronalloy
+  entries:
+    - name: bounty-item-phoronalloy
+      amount: 30
+      whitelist:
+        tags:
+        - Phoron
   bountyType: PayPer
   group: MaterialBounty
 
