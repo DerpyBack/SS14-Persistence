@@ -255,6 +255,15 @@
     Plasma: 50
 
 - type: latheRecipe
+  id: PlushieKamryn
+  result: PlushieKamryn
+  completetime: 5
+  materials:
+    Cloth: 300
+    Cotton: 1000
+    Steel: 100
+
+- type: latheRecipe
   id: PlushieCade
   result: PlushieCade
   completetime: 5

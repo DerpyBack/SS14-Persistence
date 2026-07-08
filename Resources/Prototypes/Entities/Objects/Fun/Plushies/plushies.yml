@@ -1472,6 +1472,47 @@
 
 - type: entity
   parent: BasePlushie
+  id: PlushieKamryn
+  name: Kamryn plushie
+  description: Though the staff of engineering may change there will always be one constant, Kamryn Kiefer will always need more steel!
+  components:
+  - type: Sprite
+    sprite: _Persistence14/Objects/Fun/Plushies/Kamryn.rsi
+    state: icon
+  - type: EmitSoundOnUse
+    sound: &PlushieKamSound
+      path: /Audio/Voice/Human/womanlaugh.ogg
+      params:
+        volume: -5
+  - type: EmitSoundOnLand
+    sound: *PlushieKamSound
+  - type: EmitSoundOnActivate
+    sound: *PlushieKamSound
+  - type: EmitSoundOnTrigger
+    sound: *PlushieKamSound
+  - type: Edible
+    requiresSpecialDigestion: true
+    useSound:
+      path: /Audio/Voice/Human/femalescream_3.ogg
+      params:
+        volume: -5
+  - type: MeleeWeapon
+    soundHit: *PlushieKamSound
+  - type: Clothing
+    quickEquip: false
+    sprite: _Persistence14/Objects/Fun/Plushies/Kamryn.rsi
+    slots:
+    - HEAD
+    clothingVisuals:
+      head:
+      - state: equipped-HELMET
+        offset: "0, 0.09"
+  - type: FoodSequenceElement
+    entries:
+      CottonBurger: PlushieKamryn
+
+- type: entity
+  parent: BasePlushie
   id: ToyIan
   name: ian toy
   description: Unable to eat, but just as fluffy as the real guy!
