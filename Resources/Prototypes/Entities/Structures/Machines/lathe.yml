@@ -538,12 +538,10 @@
     - Carpets
     - Bedsheets
     - NFWallets # Frontier
-    - CivilianBags
-    - CommandBags
+    - EngineeringHardhatsStatic # Persi14
   - type: EmagLatheRecipes
     emagStaticPacks:
     - ClothingSyndie
-    - ContrabandBags
   - type: MaterialStorage
     whitelist: *StandardMaterialWhitelist
   - type: OreSiloClient
