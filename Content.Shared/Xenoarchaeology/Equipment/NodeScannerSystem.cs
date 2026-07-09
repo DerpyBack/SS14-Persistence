@@ -36,7 +36,10 @@ public sealed class NodeScannerSystem : EntitySystem
             connected.NextUpdate = _timing.CurTime + connected.LinkUpdateInterval;
 
             if (!_pid.TryResolveId(connected.AttachedTo, out var attachedArtifact))
+            {
                 RemCompDeferred(uid, connected); // Scanner not connected to valid entity
+                continue;
+            }
 
             var artifactCoordinates = Transform(attachedArtifact).Coordinates;
             if (!_transform.InRange(artifactCoordinates, transform.Coordinates, scanner.MaxLinkedRange))
