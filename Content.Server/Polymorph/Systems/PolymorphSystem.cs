@@ -231,7 +231,7 @@ public sealed partial class PolymorphSystem : EntitySystem
     /// <returns>The new entity, or null if the polymorph failed.</returns>
     public EntityUid? PolymorphEntity(EntityUid uid, PolymorphConfiguration configuration)
     {
-        if (HasComp<VoidedComponent>(uid))
+        if (HasComp<VoidedComponent>(uid) || HasComp<PolymorphedEntityComponent>(uid)) // Multi polymorphs currently broken so disabled. TODO: Fix chain polys
             return null;
 
         // If they're morphed, check their current config to see if they can be
@@ -271,17 +271,12 @@ public sealed partial class PolymorphSystem : EntitySystem
 
         _mindSystem.MakeSentient(child);
 
-        // If uid is itself already a polymorphed form (a chained re-polymorph), the new form's Parent must point at the
-        // TRUE original entity, not this intermediate form - otherwise each further re-polymorph
-        // only remembers one link back, and Revert() eventually unwinds to some intermediate
-        // creature instead of all the way back to what the victim actually started as.
-        var trueOriginal = uid;
-        if (currentPoly != null && currentPoly.Parent != null)
-            trueOriginal = currentPoly.Parent.Value;
+        // Get the true original, not just the last entity. Enables chain polymorphing.
+        var trueOriginalPid = currentPoly?.ParentPersistentId ?? pid;
 
         var polymorphedComp = Factory.GetComponent<PolymorphedEntityComponent>();
         polymorphedComp.Configuration = configuration;
-        polymorphedComp.ParentPersistentId = pid;
+        polymorphedComp.ParentPersistentId = trueOriginalPid;
         AddComp(child, polymorphedComp);
 
         var childXform = Transform(child);
@@ -374,7 +369,7 @@ public sealed partial class PolymorphSystem : EntitySystem
 
         if (ent.Comp?.ParentPersistentId is not { } pid)
             return null;
-        }
+
 
         var uidXform = Transform(uid);
 
