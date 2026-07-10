@@ -168,7 +168,21 @@
   components:
   - type: Sprite
     sprite: Structures/Power/apc.rsi
-    state: frame
+    layers:
+    - state: frame
+      map: ["enum.ConstructionVisuals.Layer"]
+  - type: Appearance
+  - type: GenericVisualizer
+    visuals:
+      enum.ConstructionVisuals.Key:
+        enum.ConstructionVisuals.Layer:
+          apcFrame: { state: frame}
+          apcCable: { state: frame-cable}
+          apcwithboard: { state: frame-board}
+          apc-powercell: { state: apc-powercell}
+          apc-midpowercell: { state: apc-midpowercell}
+          apc-closed: { state: apc-closed}
+          apcfinished: { state: frame-finished}
   - type: Construction
     graph: APC
     node: apcFrame
@@ -212,7 +226,7 @@
 - type: entity
   parent: BaseAPC
   id: APCBasic
-  name: APC v2
+  name: APC medium Capacity
   components:
   - type: Battery
     maxCharge: 40000

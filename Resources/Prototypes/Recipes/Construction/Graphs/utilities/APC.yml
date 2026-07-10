@@ -12,9 +12,11 @@
 
     - node: apcFrame
       entity: APCFrame
+      actions:
+      - !type:AppearanceChange
       edges:
 
-        - to: apcwithboard
+        - to: apcCable
           completed:
           - !type:PlaySound
             sound: /Audio/Machines/screwdriveropen.ogg
@@ -22,13 +24,7 @@
             - material: Cable
               amount: 2
               doAfter: 1
-            - tag: ApcElectronics
-              store: board
-              name: construction-graph-component-apc-electronics
-              icon:
-                sprite: "Objects/Misc/module.rsi"
-                state: "charger_APC"
-              doAfter: 2
+
             
         - to: start
           completed:
@@ -40,48 +36,24 @@
             - tool: Prying
               doAfter: 2
 
-    - node: apcwithboard
+    - node: apcCable
       entity: APCFrame
+      actions:
+      - !type:AppearanceChange
       edges:
 
-        - to: apc
-          steps:
-            - tag: PowerCellSmall
-              store: powercell
-              name: construction-graph-component-power-cell
-              icon:
-                sprite: "Objects/Power/power_cells.rsi"
-                state: "small"
-              doAfter: 2
-            - tool: Screwing
-              doAfter: 1
-          conditions:
-            - !type:WirePanel
-              open: false
+        - to: apcwithboard
           completed:
           - !type:PlaySound
-            sound: /Audio/Machines/screwdriverclose.ogg
-
-        - to: apcv2
+            sound: /Audio/Machines/screwdriveropen.ogg
           steps:
-            - material: CableMV
-              amount: 2
-              doAfter: 1
-            - tag: PowerCellMedium
-              store: powercell
-              name: construction-graph-component-medium-power-cell
+            - tag: ApcElectronics
+              store: board
+              name: construction-graph-component-apc-electronics
               icon:
-                sprite: "Objects/Power/power_cells.rsi"
-                state: "medium"
+                sprite: "Objects/Misc/module.rsi"
+                state: "charger_APC"
               doAfter: 2
-            - tool: Screwing
-              doAfter: 1
-          conditions:
-            - !type:WirePanel
-              open: false
-          completed:
-          - !type:PlaySound
-            sound: /Audio/Machines/screwdriverclose.ogg
             
         - to: apcFrame
           completed:
@@ -91,26 +63,120 @@
           steps:
             - tool: Prying
               doAfter: 2
+          
+    - node: apcwithboard
+      actions:
+      - !type:AppearanceChange
+      entity: APCFrame
+      edges:
+
+      - to: apcfinished
+        steps:
+        - tool: Screwing
+          doAfter: 1
+        
+      - to: apcCable
+        steps:
+        - tool: Prying
+          doAfter: 1
+
+    - node: apcfinished
+      actions:
+      - !type:AppearanceChange
+      entity: APCFrame
+      edges:
+
+        - to: apc-powercell
+          steps:
+            - tag: PowerCellSmall
+              store: powercell
+              name: construction-graph-component-power-cell
+              icon:
+                sprite: "Objects/Power/power_cells.rsi"
+                state: "small"
+              doAfter: 2
+          conditions:
+            - !type:WirePanel
+              open: false
+          completed:
+          - !type:PlaySound
+            sound: /Audio/Machines/screwdriverclose.ogg
+
+        - to: apc-midpowercell
+          steps:
+            - tag: PowerCellMedium
+              store: powercell
+              name: construction-graph-component-medium-power-cell
+              icon:
+                sprite: "Objects/Power/power_cells.rsi"
+                state: "medium"
+              doAfter: 2
+          conditions:
+            - !type:WirePanel
+              open: false
+          completed:
+          - !type:PlaySound
+            sound: /Audio/Machines/screwdriverclose.ogg
+
+        - to: apcCable
+          completed:
+          - !type:EmptyContainer
+            container: board
+            pickup: true
+          steps:
+            - tool: Prying
+              doAfter: 2
+
+    - node: apc-powercell
+      actions:
+      - !type:AppearanceChange
+      entity: APCFrame
+      edges:
+      - to: apc
+        steps:
+        - tool: Screwing
+          doAfter: 2
+
+    - node: apc-midpowercell
+      actions:
+      - !type:AppearanceChange
+      entity: APCFrame
+      edges:
+      - to: apc-closed
+        steps:
+        - material: CableMV
+          amount: 2
+          doAfter: 1
+
+    - node: apc-closed
+      actions:
+      - !type:AppearanceChange
+      entity: APCFrame
+      edges:
+      - to: apcv2
+        steps:
+        - tool: Screwing
+          doAfter: 2
 
     - node: apc
       entity: APCConstructed
       edges:
-        - to: apcwithboard
-          completed:
-          - !type:EmptyContainer
-            container: powercell
-            pickup: true
-          conditions:
-            - !type:WirePanel
-              open: true
-          steps:
-            - tool: Prying
-              doAfter: 4
+      - to: apcfinished
+        completed:
+        - !type:EmptyContainer
+          container: powercell
+          pickup: true
+        conditions:
+          - !type:WirePanel
+            open: true
+        steps:
+          - tool: Prying
+            doAfter: 4
 
     - node: apcv2
       entity: APCBasic
       edges:
-        - to: apcwithboard
+        - to: apcfinished
           completed:
           - !type:EmptyContainer
             container: powercell

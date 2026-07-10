@@ -8,6 +8,19 @@
   },
   "states": [
     {
+      "name": "apc-powercell",
+      "directions": 4
+    },
+    {
+      "name": "apc-midpowercell",
+      "directions": 4
+    },
+    {
+      "name": "apc-closed",
+      "directions": 4
+    },
+    
+    {
       "name": "base",
       "directions": 4
     },
@@ -24,6 +37,18 @@
     },
     {
       "name": "frame",
+      "directions": 4
+    },
+    {
+      "name": "frame-board",
+      "directions": 4
+    },
+    {
+      "name": "frame-cable",
+      "directions": 4
+    },
+    {
+      "name": "frame-finished",
       "directions": 4
     },
     {
