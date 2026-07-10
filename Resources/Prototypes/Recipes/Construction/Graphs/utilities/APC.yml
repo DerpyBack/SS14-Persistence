@@ -149,11 +149,11 @@
           doAfter: 1
 
     - node: apc-closed
-      actions:
-      - !type:AppearanceChange
       entity: APCFrame
       edges:
       - to: apcv2
+        completed:
+        - !type:AppearanceChange
         steps:
         - tool: Screwing
           doAfter: 2
