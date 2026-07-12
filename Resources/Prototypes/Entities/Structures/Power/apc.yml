@@ -228,7 +228,7 @@
 - type: entity
   parent: BaseAPC
   id: APCBasic
-  name: APC medium Capacity
+  name: APC medium capacity
   components:
   - type: Battery
     maxCharge: 30000
@@ -272,6 +272,7 @@
 
 - type: entity
   parent: BaseAPC
+  name: APC high capacity
   id: APCHighCapacity
   suffix: High Capacity, 40kW
   components:
@@ -317,6 +318,7 @@
 
 - type: entity
   parent: BaseAPC
+  name: APC hyper capacity
   id: APCSuperCapacity
   suffix: Super Capacity, 50kW
   components:
