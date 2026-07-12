@@ -20,7 +20,7 @@
 
 - type: entity
   id: BannerFlowerOfEvil
-  parent: [BannerBase, BaseStructureDynamic]
+  parent: BannerBase
   name: les fleur du mal banner
   description: A banner displaying the Les Fleur Du Mal logo. Looks sinister...
   components:
