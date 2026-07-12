@@ -273,6 +273,15 @@
     Biomass: 30
 
 - type: latheRecipe
+  id: PlushieDies
+  result: PlushieDies
+  completetime: 5
+  materials:
+    Cloth: 300
+    Cotton: 1000
+    PlasmaGlass: 50
+
+- type: latheRecipe
   parent: BasePlushieRecipe
   id: ToyIan
   result: ToyIan
