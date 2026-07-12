@@ -162,8 +162,8 @@
       optimalPower: 30000
       #Buffed for Persistence, one sheet every minute at optimal power up to 2 minutes if running at 5 kW.
       optimalBurnRate: 0.0165 #0.0333333 before
-    - type: SolidFuelGeneratorAdapter
       fuelEfficiencyConstant: 0.75
+    - type: SolidFuelGeneratorAdapter
       fuelMaterial: Plasma
       multiplier: 0.01
     - type: MaterialStorage
