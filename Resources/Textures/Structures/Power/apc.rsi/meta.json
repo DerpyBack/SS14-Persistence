@@ -16,6 +16,14 @@
       "directions": 4
     },
     {
+      "name": "apc-highpowercell",
+      "directions": 4
+    },
+    {
+      "name": "apc-hyperpowercell",
+      "directions": 4
+    },
+    {
       "name": "apc-closed",
       "directions": 4
     },
@@ -26,6 +34,14 @@
     },
     {
       "name": "basev2",
+      "directions": 4
+    },
+    {
+      "name": "basev3",
+      "directions": 4
+    },
+    {
+      "name": "basev4",
       "directions": 4
     },
 	{

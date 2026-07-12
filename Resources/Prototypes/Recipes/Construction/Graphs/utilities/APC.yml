@@ -118,6 +118,38 @@
           - !type:PlaySound
             sound: /Audio/Machines/screwdriverclose.ogg
 
+        - to: apc-highpowercell
+          steps:
+            - tag: PowerCellHigh
+              store: powercell
+              name: construction-graph-component-high-power-cell
+              icon:
+                sprite: "Objects/Power/power_cells.rsi"
+                state: "high"
+              doAfter: 2
+          conditions:
+            - !type:WirePanel
+              open: false
+          completed:
+          - !type:PlaySound
+            sound: /Audio/Machines/screwdriverclose.ogg
+
+        - to: apc-hyperpowercell
+          steps:
+            - tag: PowerCellHyper
+              store: powercell
+              name: construction-graph-component-hyper-power-cell
+              icon:
+                sprite: "Objects/Power/power_cells.rsi"
+                state: "hyper"
+              doAfter: 2
+          conditions:
+            - !type:WirePanel
+              open: false
+          completed:
+          - !type:PlaySound
+            sound: /Audio/Machines/screwdriverclose.ogg
+
         - to: apcCable
           completed:
           - !type:EmptyContainer
@@ -148,6 +180,31 @@
           amount: 2
           doAfter: 1
 
+    - node: apc-highpowercell
+      actions:
+      - !type:AppearanceChange
+      entity: APCFrame
+      edges:
+      - to: apcv3
+        steps:
+        - material: CableMV
+          amount: 3
+          doAfter: 1
+        
+
+    - node: apc-hyperpowercell
+      actions:
+      - !type:AppearanceChange
+      entity: APCFrame
+      edges:
+      - to: apcv4
+        steps:
+        - material: CableHV
+          amount: 2
+          doAfter: 1
+        - tool: Welding
+          doAfter: 3
+
     - node: apc-closed
       entity: APCFrame
       edges:
@@ -175,6 +232,36 @@
 
     - node: apcv2
       entity: APCBasic
+      edges:
+        - to: apcfinished
+          completed:
+          - !type:EmptyContainer
+            container: powercell
+            pickup: true
+          conditions:
+            - !type:WirePanel
+              open: true
+          steps:
+            - tool: Prying
+              doAfter: 4
+
+    - node: apcv3
+      entity: APCHighCapacity
+      edges:
+        - to: apcfinished
+          completed:
+          - !type:EmptyContainer
+            container: powercell
+            pickup: true
+          conditions:
+            - !type:WirePanel
+              open: true
+          steps:
+            - tool: Prying
+              doAfter: 4
+
+    - node: apcv4
+      entity: APCSuperCapacity
       edges:
         - to: apcfinished
           completed:

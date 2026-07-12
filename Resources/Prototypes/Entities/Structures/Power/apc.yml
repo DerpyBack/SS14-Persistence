@@ -181,7 +181,9 @@
           apcwithboard: { state: frame-board}
           apc-powercell: { state: apc-powercell}
           apc-midpowercell: { state: apc-midpowercell}
-          apc-closed: { state: apc-closed}
+          apc-highpowercell: { state: apc-highpowercell}
+          apc-hyperpowercell: { state: apc-hyperpowercell}
+          apc-closedm: { state: apc-closed}
           apcfinished: { state: frame-finished}
   - type: Construction
     graph: APC
@@ -229,31 +231,134 @@
   name: APC medium Capacity
   components:
   - type: Battery
+    maxCharge: 30000
+    startingCharge: 0
+  - type: Apc
+    maxLoad: 30000
+  - type: Construction
+    graph: APC
+    node: apcv2
+  - type: Sprite
+    drawdepth: WallMountedItems
+    sprite: Structures/Power/apc.rsi
+    layers:
+    - state: basev2
+    - state: panel
+      map: ["enum.WiresVisualLayers.MaintenancePanel"]
+      visible: false
+    - state: display-charging
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.ChargeState"]
+    - state: lock0-locked
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.InterfaceLock"]
+      visible: false
+    - state: lock1-locked
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.PanelLock"]
+      visible: false
+    - state: lock1-locked #when these are implemented get actual sprites.
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.Equipment"]
+      visible: false
+    - state: lock1-locked
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.Lighting"]
+      visible: false
+    - state: lock1-locked
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.Environment"]
+      visible: false
+
+- type: entity
+  parent: BaseAPC
+  id: APCHighCapacity
+  suffix: High Capacity, 40kW
+  components:
+  - type: Battery
     maxCharge: 40000
     startingCharge: 0
   - type: Apc
     maxLoad: 40000
   - type: Construction
     graph: APC
-    node: apcv2
-
-- type: entity
-  parent: BaseAPC
-  id: APCHighCapacity
-  suffix: High Capacity, 100kJ
-  components:
-  - type: Battery
-    maxCharge: 100000
-    startingCharge: 100000
+    node: apcv3
+  - type: Sprite
+    drawdepth: WallMountedItems
+    sprite: Structures/Power/apc.rsi
+    layers:
+    - state: basev3
+    - state: panel
+      map: ["enum.WiresVisualLayers.MaintenancePanel"]
+      visible: false
+    - state: display-charging
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.ChargeState"]
+    - state: lock0-locked
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.InterfaceLock"]
+      visible: false
+    - state: lock1-locked
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.PanelLock"]
+      visible: false
+    - state: lock1-locked #when these are implemented get actual sprites.
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.Equipment"]
+      visible: false
+    - state: lock1-locked
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.Lighting"]
+      visible: false
+    - state: lock1-locked
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.Environment"]
+      visible: false
 
 - type: entity
   parent: BaseAPC
   id: APCSuperCapacity
-  suffix: Super Capacity, 150kJ
+  suffix: Super Capacity, 50kW
   components:
   - type: Battery
-    maxCharge: 150000
-    startingCharge: 150000
+    maxCharge: 50000
+    startingCharge: 0
+  - type: Apc
+    maxLoad: 50000
+  - type: Construction
+    graph: APC
+    node: apcv4
+  - type: Sprite
+    drawdepth: WallMountedItems
+    sprite: Structures/Power/apc.rsi
+    layers:
+    - state: basev4
+    - state: panel
+      map: ["enum.WiresVisualLayers.MaintenancePanel"]
+      visible: false
+    - state: display-charging
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.ChargeState"]
+    - state: lock0-locked
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.InterfaceLock"]
+      visible: false
+    - state: lock1-locked
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.PanelLock"]
+      visible: false
+    - state: lock1-locked #when these are implemented get actual sprites.
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.Equipment"]
+      visible: false
+    - state: lock1-locked
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.Lighting"]
+      visible: false
+    - state: lock1-locked
+      shader: unshaded
+      map: ["enum.ApcVisualLayers.Environment"]
+      visible: false
 
 - type: entity
   parent: BaseAPC

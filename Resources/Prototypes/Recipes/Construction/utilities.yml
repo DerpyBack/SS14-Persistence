@@ -57,6 +57,30 @@
   - !type:WallmountCondition {}
 
 - type: construction
+  id: APCv3
+  graph: APC
+  startNode: start
+  targetNode: apcv3
+  category: construction-category-utilities
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: true
+  conditions:
+  - !type:WallmountCondition {}
+
+- type: construction
+  id: APCv4
+  graph: APC
+  startNode: start
+  targetNode: apcv4
+  category: construction-category-utilities
+  objectType: Structure
+  placementMode: SnapgridCenter
+  canBuildInImpassable: true
+  conditions:
+  - !type:WallmountCondition {}
+
+- type: construction
   id: CableTerminal
   graph: CableTerminal
   startNode: start
