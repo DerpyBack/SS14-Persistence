@@ -7,6 +7,9 @@
   - type: Sprite
     sprite: _Persistence14\Structures\Decoration\banner.rsi
     state: banner_sl
+  - type: Construction
+    graph: BannerGraph
+    node: bannerSL
 
 - type: entity
   id: BannerWayfarerDynamics
@@ -17,6 +20,9 @@
   - type: Sprite
     sprite: _Persistence14\Structures\Decoration\banner.rsi
     state: banner_wd
+  - type: Construction
+    graph: BannerGraph
+    node: bannerWD
 
 - type: entity
   id: BannerFlowerOfEvil
@@ -27,3 +33,6 @@
   - type: Sprite
     sprite: _Persistence14\Structures\Decoration\banner.rsi
     state: banner_foe
+  - type: Construction
+    graph: BannerGraph
+    node: bannerFoe
