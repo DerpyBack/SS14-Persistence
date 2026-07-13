@@ -172,7 +172,7 @@
           doAfter: 1
       - to: bannerSL
         steps:
-        - material: MaterialWoodPlank
+        - material: WoodPlank
           amount: 2
           doAfter: 1
         - material: Steel
@@ -225,8 +225,11 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: MaterialCloth1
+              prototype: FloorCarpetItemBlue
               amount: 2
+            - !type:GivePrototype
+              prototype: FloorCarpetItemWhite
+              amount: 1
           steps:
             - tool: Cutting
               doAfter: 1
@@ -236,7 +239,7 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: FloorCarpetOrange
+              prototype: FloorCarpetItemOrange
               amount: 3
           steps:
             - tool: Cutting
@@ -247,9 +250,10 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: FloorCarpetOrange
+              prototype: FloorCarpetItemOrange
               amount: 2
-              prototype: FloorCarpetPurple
+            - !type:GivePrototype
+              prototype: FloorCarpetItemPurple
               amount: 1
           steps:
             - tool: Cutting
@@ -260,9 +264,10 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: FloorCarpetSkyBlue
+              prototype: FloorCarpetItemSkyBlue
               amount: 2
-              prototype: FloorCarpetWhite
+            - !type:GivePrototype
+              prototype: FloorCarpetItemWhite
               amount: 1
           steps:
             - tool: Cutting
@@ -273,9 +278,10 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: FloorCarpetWhite
+              prototype: FloorCarpetItemWhite
               amount: 2
-              prototype: FloorCarpetRed
+            - !type:GivePrototype
+              prototype: FloorCarpetItemRed
               amount: 1
           steps:
             - tool: Cutting
@@ -286,9 +292,10 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: FloorCarpetRed
+              prototype: FloorCarpetItemRed
               amount: 2
-              prototype: FloorCarpetBlack
+            - !type:GivePrototype
+              prototype: FloorCarpetItemBlack
               amount: 1
           steps:
             - tool: Cutting
@@ -299,9 +306,10 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: FloorCarpetWhite
+              prototype: FloorCarpetItemWhite
               amount: 2
-              prototype: FloorCarpetPurple
+            - !type:GivePrototype
+              prototype: FloorCarpetItemPurple
               amount: 1
           steps:
             - tool: Cutting
@@ -312,9 +320,10 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: FloorCarpetRed
+              prototype: FloorCarpetItemRed
               amount: 2
-              prototype: FloorCarpetBlue
+            - !type:GivePrototype
+              prototype: FloorCarpetItemBlue
               amount: 1
           steps:
             - tool: Cutting
@@ -325,9 +334,10 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: FloorCarpetBlue
+              prototype: FloorCarpetItemBlue
               amount: 2
-              prototype: FloorCarpetWhite
+            - !type:GivePrototype
+              prototype: FloorCarpetItemWhite
               amount: 1
           steps:
             - tool: Cutting
@@ -338,9 +348,10 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: FloorCarpetRed
+              prototype: FloorCarpetItemRed
               amount: 2
-              prototype: FloorCarpetOrange
+            - !type:GivePrototype
+              prototype: FloorCarpetItemOrange
               amount: 1
           steps:
             - tool: Cutting
@@ -351,9 +362,10 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: FloorCarpetWhite
+              prototype: FloorCarpetItemWhite
               amount: 2
-              prototype: FloorCarpetOrange
+            - !type:GivePrototype
+              prototype: FloorCarpetItemOrange
               amount: 1
           steps:
             - tool: Cutting
@@ -364,9 +376,10 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: FloorCarpetGreen
+              prototype: FloorCarpetItemGreen
               amount: 2
-              prototype: FloorCarpetWhite
+            - !type:GivePrototype
+              prototype: FloorCarpetItemWhite
               amount: 1
           steps:
             - tool: Cutting
@@ -377,9 +390,10 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: FloorCarpetOrange
+              prototype: FloorCarpetItemOrange
               amount: 2
-              prototype: FloorCarpetRed
+            - !type:GivePrototype
+              prototype: FloorCarpetItemRed
               amount: 1
           steps:
             - tool: Cutting
@@ -390,11 +404,13 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: FloorCarpetBlack
+              prototype: FloorCarpetItemBlack
               amount: 1
-              prototype: FloorCarpetOrange
+            - !type:GivePrototype
+              prototype: FloorCarpetItemOrange
               amount: 1
-              prototype: FloorCarpetSkyBlue
+            - !type:GivePrototype
+              prototype: FloorCarpetItemSkyBlue
               amount: 1
           steps:
             - tool: Cutting
@@ -405,11 +421,13 @@
         - to: start
           completed:
             - !type:GivePrototype
-              prototype: FloorCarpetBlack
+              prototype: FloorCarpetItemBlack
               amount: 1
-              prototype: FloorCarpetPurple
+            - !type:GivePrototype
+              prototype: FloorCarpetItemPurple
               amount: 1
-              prototype: FloorCarpetRed
+            - !type:GivePrototype
+              prototype: FloorCarpetItemRed
               amount: 1
           steps:
             - tool: Cutting
