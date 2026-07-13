@@ -1538,7 +1538,7 @@
       params:
         volume: -5
         pitch: 1.5
-      transferAmount: 10
+    transferAmount: 10
   - type: Extractable
     juiceSolution:
       reagents:
