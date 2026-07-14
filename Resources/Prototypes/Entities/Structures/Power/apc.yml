@@ -176,18 +176,33 @@
     visuals:
       enum.ConstructionVisuals.Key:
         enum.ConstructionVisuals.Layer:
-          apcFrame: { state: frame}
-          apcCable: { state: frame-cable}
-          apcwithboard: { state: frame-board}
-          apc-powercell: { state: apc-powercell}
-          apc-midpowercell: { state: apc-midpowercell}
-          apc-highpowercell: { state: apc-highpowercell}
-          apc-hyperpowercell: { state: apc-hyperpowercell}
-          apc-closedm: { state: apc-closed}
-          apcfinished: { state: frame-finished}
+          apc-frame: { state: frame }
+          apc-cable-lv: { state: frame-cable }
+          apc-lv-board: { state: frame-board }
+          apc-lv-cell-ready: { state: frame-finished }
+          apc-standard-open: { state: apc-powercell }
+          apc-standard: { state: apc-closed }
+
+          apc-cable-mv: { state: frame-cable }
+          apc-mv-board: { state: frame-board }
+          apc-mv-cell-ready: { state: frame-finished }
+          apc-medium-open: { state: apc-midpowercell }
+          apc-medium: { state: apc-closed }
+          apc-high-open: { state: apc-highpowercell }
+          apc-high-plating: { state: apc-highpowercell }
+          apc-high-plating-welded: { state: apc-highpowercell }
+          apc-high: { state: apc-closed }
+
+          apc-cable-hv: { state: frame-cable }
+          apc-hv-board: { state: frame-board }
+          apc-hv-cell-ready: { state: frame-finished }
+          apc-hyper-open: { state: apc-hyperpowercell }
+          apc-hyper-plating: { state: apc-hyperpowercell }
+          apc-hyper-plating-welded: { state: apc-hyperpowercell }
+          apc-hyper: { state: apc-closed }
   - type: Construction
     graph: APC
-    node: apcFrame
+    node: apc-frame
   - type: Destructible
     thresholds:
     - trigger:
@@ -223,11 +238,18 @@
   components:
   - type: WiresPanel
     open: false
+  - type: Construction
+    graph: APC
+    node: apc-standard
+
+- type: entity
+  parent: APCMediumCapacity
+  id: APCBasic
 
 # APCs in use
 - type: entity
   parent: BaseAPC
-  id: APCBasic
+  id: APCMediumCapacity
   name: APC medium capacity
   components:
   - type: Battery
@@ -237,7 +259,7 @@
     maxLoad: 30000
   - type: Construction
     graph: APC
-    node: apcv2
+    node: apc-medium
   - type: Sprite
     drawdepth: WallMountedItems
     sprite: Structures/Power/apc.rsi
@@ -283,7 +305,7 @@
     maxLoad: 40000
   - type: Construction
     graph: APC
-    node: apcv3
+    node: apc-high
   - type: Sprite
     drawdepth: WallMountedItems
     sprite: Structures/Power/apc.rsi
@@ -329,7 +351,7 @@
     maxLoad: 50000
   - type: Construction
     graph: APC
-    node: apcv4
+    node: apc-hyper
   - type: Sprite
     drawdepth: WallMountedItems
     sprite: Structures/Power/apc.rsi

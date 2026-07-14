@@ -33,10 +33,10 @@
 
 # POWER
 - type: construction
-  id: APC
+  id: APCStandard
   graph: APC
   startNode: start
-  targetNode: apc
+  targetNode: apc-standard
   category: construction-category-utilities
   objectType: Structure
   placementMode: SnapgridCenter
@@ -45,10 +45,10 @@
   - !type:WallmountCondition {}
 
 - type: construction
-  id: APCv2
+  id: APCMedium
   graph: APC
   startNode: start
-  targetNode: apcv2
+  targetNode: apc-medium
   category: construction-category-utilities
   objectType: Structure
   placementMode: SnapgridCenter
@@ -57,10 +57,10 @@
   - !type:WallmountCondition {}
 
 - type: construction
-  id: APCv3
+  id: APCHigh
   graph: APC
   startNode: start
-  targetNode: apcv3
+  targetNode: apc-high
   category: construction-category-utilities
   objectType: Structure
   placementMode: SnapgridCenter
@@ -69,10 +69,10 @@
   - !type:WallmountCondition {}
 
 - type: construction
-  id: APCv4
+  id: APCHyper
   graph: APC
   startNode: start
-  targetNode: apcv4
+  targetNode: apc-hyper
   category: construction-category-utilities
   objectType: Structure
   placementMode: SnapgridCenter
