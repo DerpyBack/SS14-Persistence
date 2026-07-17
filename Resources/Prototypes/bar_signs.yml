@@ -215,7 +215,7 @@
   description: barsign-prototype-description-empbarsign
 
 - type: barSign
-  id: PregLuxuries
+  id: pregluxuries
   name: barsign-prototype-name-pregluxuries
   icon:
     sprite: Structures/Wallmounts/barsign.rsi

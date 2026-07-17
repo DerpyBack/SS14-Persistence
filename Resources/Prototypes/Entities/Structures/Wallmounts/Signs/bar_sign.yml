@@ -334,9 +334,9 @@
 
 - type: entity
   parent: BaseBarSign
-  id: BarSignPregLuxuries
+  id: BarSignpregluxuries
   name: PREG Luxuries
   description: Time is a luxury, what better way to spend it than with a drink?
   components:
   - type: BarSign
-    current: PregLuxuries
+    current: pregluxuries
